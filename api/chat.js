@@ -13,6 +13,7 @@ export default async function handler(req, res) {
   const allowed = [
     'https://clarioai.ae',
     'https://www.clarioai.ae',
+    'https://clario-alpha.vercel.app',
     'http://localhost:3000',   // local dev
     'http://127.0.0.1:5500',  // VS Code Live Server
   ];
