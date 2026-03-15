@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clario — Five minds. One decision. Pure clarity.</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0f0e1a; --bg2:#1a1830; --bg3:#221f38;
+  --purple:#534AB7; --purple-light:#7F77DD; --lavender:#EEEDFE;
+  --text:#f0eeff; --text-muted:#8b87b0; --text-dim:#5a5678;
+  --border:rgba(255,255,255,0.07); --border-active:rgba(255,255,255,0.18);
+  --rex:#D85A30; --nadia:#1D9E75; --kai:#7F77DD; --mira:#BA7517; --dante:#D4537E;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6}
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex;flex-direction:column}
+
+/* ─ SHARED ─ */
+.logo-row{display:flex;align-items:center;gap:10px}
+.logo-icon{border-radius:10px;background:#1a1642;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-name{font-family:'DM Serif Display',serif;color:var(--text);letter-spacing:-.01em}
+.back-btn{background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;padding:4px}
+.back-btn:hover{color:var(--text)}
+.pill-btn{padding:5px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text-muted);font-size:12px;cursor:pointer;transition:all .15s;background:transparent;font-family:'DM Sans',sans-serif}
+.pill-btn:hover{border-color:var(--border-active);color:var(--text);background:var(--bg3)}
+
+/* ─ AUTH SCREEN ─ */
+#screen-auth{align-items:center;justify-content:center;padding:40px 24px;text-align:center}
+.auth-card{width:100%;max-width:400px;background:var(--bg2);border:1px solid var(--border-active);border-radius:20px;padding:32px 28px}
+.auth-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px}
+.auth-headline{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);margin-bottom:8px;line-height:1.2}
+.auth-sub{font-size:13px;color:var(--text-muted);margin-bottom:28px;line-height:1.55}
+.sso-btn{width:100%;padding:12px 16px;border-radius:10px;border:1px solid var(--border-active);background:var(--bg3);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;transition:all .2s}
+.sso-btn:hover{background:#2a2745;border-color:var(--purple)}
+.sso-divider{display:flex;align-items:center;gap:10px;margin:16px 0}
+.sso-divider span{font-size:11px;color:var(--text-dim);white-space:nowrap}
+.sso-divider::before,.sso-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.auth-input{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border-active);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:10px;transition:border-color .2s}
+.auth-input:focus{border-color:var(--purple)}
+.auth-input::placeholder{color:var(--text-dim)}
+.auth-primary-btn{width:100%;padding:13px;background:#c9a96e;color:#fff;border:none;border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:background .2s;margin-top:4px}
+.auth-primary-btn:hover{background:#3C3489}
+.auth-toggle{font-size:12px;color:var(--text-dim);margin-top:16px}
+.auth-toggle a{color:var(--purple-light);cursor:pointer;text-decoration:none}
+.auth-toggle a:hover{text-decoration:underline}
+.auth-disclaimer{font-size:11px;color:var(--text-dim);margin-top:20px;line-height:1.5}
+.user-bar{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:5px 12px 5px 5px}
+.user-avatar{width:26px;height:26px;border-radius:50%;background:#1a1642;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#fff}
+.user-name{font-size:12px;color:var(--text-muted)}
+.logout-btn{background:none;border:none;color:var(--text-dim);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0 0 0 6px}
+.logout-btn:hover{color:var(--text)}
+
+/* ─ QUIZ SCREEN ─ */
+#screen-quiz{align-items:center;padding:40px 24px}
+.quiz-header{width:100%;max-width:560px;display:flex;align-items:center;justify-content:space-between;margin-bottom:40px}
+.quiz-main{width:100%;max-width:560px;flex:1;display:flex;flex-direction:column;justify-content:center}
+.quiz-progress{display:flex;gap:6px;margin-bottom:32px}
+.quiz-dot{height:3px;border-radius:2px;flex:1;background:var(--border-active);transition:background .3s}
+.quiz-dot.done{background:var(--purple)}
+.quiz-dot.active{background:var(--purple-light)}
+.quiz-advisor-tag{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:20px;border:1px solid var(--border-active);font-size:12px;margin-bottom:16px}
+.quiz-q{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);line-height:1.3;margin-bottom:24px}
+.quiz-options{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+.quiz-option{padding:14px 16px;border-radius:12px;border:1px solid var(--border-active);background:var(--bg2);color:var(--text-muted);font-size:13px;line-height:1.5;cursor:pointer;transition:all .2s;text-align:left;font-family:'DM Sans',sans-serif}
+.quiz-option:hover{border-color:var(--purple-light);color:var(--text);background:var(--bg3)}
+.quiz-option.selected{border-color:var(--purple);background:rgba(83,74,183,0.15);color:var(--text)}
+.quiz-next-btn{padding:12px 28px;background:#c9a96e;color:#fff;border:none;border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:background .2s;align-self:flex-end}
+.quiz-next-btn:hover{background:#3C3489}
+.quiz-next-btn:disabled{background:var(--bg3);color:var(--text-dim);cursor:not-allowed}
+.quiz-skip{font-size:11px;color:var(--text-dim);text-align:center;margin-top:12px;cursor:pointer}
+.quiz-skip:hover{color:var(--text-muted)}
+
+/* ─ RESULT CARD ─ */
+.advisor-result-card{border-radius:16px;padding:24px;margin-bottom:24px;text-align:center}
+.result-avatar{width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.result-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.result-name{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:4px}
+.result-role{font-size:13px;margin-bottom:10px}
+.result-desc{font-size:13px;line-height:1.65;opacity:.8}
+.enter-board-btn{width:100%;padding:13px;background:#c9a96e;color:#fff;border:none;border-radius:10px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:background .2s}
+.enter-board-btn:hover{background:#3C3489}
+
+/* ─ INTRO SCREEN ─ */
+#screen-intro{align-items:center;justify-content:center;padding:40px 24px;text-align:center}
+.intro-eyebrow{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple-light);margin-bottom:16px;font-weight:500}
+.intro-headline{font-family:'DM Serif Display',serif;font-size:clamp(28px,5vw,44px);color:var(--text);line-height:1.15;margin-bottom:16px;max-width:560px}
+.intro-headline em{font-style:italic;color:var(--purple-light)}
+.intro-sub{font-size:15px;color:var(--text-muted);max-width:420px;margin:0 auto 28px;line-height:1.65}
+.advisor-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.advisor-pip{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);font-size:12px;color:var(--text-muted)}
+.advisor-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.start-btn{padding:14px 36px;background:#c9a96e;color:#fff;border:none;border-radius:10px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:background .2s}
+.start-btn:hover{background:#3C3489}
+.disclaimer-tiny{font-size:11px;color:var(--text-dim);margin-top:20px;max-width:400px;line-height:1.5}
+
+/* ─ INPUT SCREEN ─ */
+#screen-input{padding:32px 24px;align-items:center}
+.input-topbar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:600px;margin-bottom:40px}
+.input-main{width:100%;max-width:600px;flex:1;display:flex;flex-direction:column;justify-content:center}
+.input-prompt{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);margin-bottom:6px}
+.input-sub-text{font-size:13px;color:var(--text-muted);margin-bottom:16px}
+.decision-textarea{width:100%;min-height:140px;padding:16px;background:var(--bg2);border:1px solid var(--border-active);border-radius:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.65;resize:vertical;transition:border-color .2s;outline:none}
+.decision-textarea::placeholder{color:var(--text-dim)}
+.decision-textarea:focus{border-color:var(--purple)}
+.input-examples{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 20px}
+.submit-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.input-disclaimer{font-size:11px;color:var(--text-dim);line-height:1.4;max-width:300px}
+.submit-btn{padding:12px 28px;background:#c9a96e;color:#fff;border:none;border-radius:9px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:background .2s;white-space:nowrap}
+.submit-btn:hover{background:#3C3489}
+.primary-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);font-size:11px;color:var(--text-muted);margin-bottom:16px}
+
+/* ─ DEBATE SCREEN ─ */
+.debate-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:10}
+.debate-status{font-size:12px;color:var(--text-muted)}
+.debate-body{max-width:680px;margin:0 auto;padding:28px 24px 80px}
+.decision-recap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:28px}
+.decision-recap-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim);margin-bottom:5px}
+.decision-recap-text{font-size:14px;color:var(--text);line-height:1.55}
+.advisor-cards-row{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.adv-card{flex:1;min-width:80px;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);text-align:center;transition:all .3s}
+.adv-card.speaking{border-color:var(--adv-color,var(--purple));box-shadow:0 0 0 1px var(--adv-color,var(--purple)) inset}
+.adv-card.done{opacity:.65}
+.adv-card.primary-advisor{border-color:var(--adv-color) !important;opacity:1 !important}
+.adv-card-avatar{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:14px;background:var(--bg3)}
+.adv-card-name{font-size:11px;font-weight:500;color:var(--text-muted)}
+.adv-card-role{font-size:9px;color:var(--text-dim)}
+.adv-card.speaking .adv-card-name,.adv-card.primary-advisor .adv-card-name{color:var(--text)}
+.primary-star{font-size:9px;margin-top:2px}
+.messages{display:flex;flex-direction:column;gap:16px;margin-bottom:24px}
+.msg-wrap{display:flex;gap:12px;opacity:0;transform:translateY(10px);transition:all .4s}
+.msg-wrap.visible{opacity:1;transform:translateY(0)}
+.msg-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#fff}
+.msg-body{flex:1}
+.msg-header{display:flex;align-items:baseline;gap:8px;margin-bottom:5px}
+.msg-name{font-size:12px;font-weight:500}
+.msg-role{font-size:11px;color:var(--text-dim)}
+.msg-primary-tag{font-size:9px;padding:1px 6px;border-radius:6px;background:rgba(83,74,183,0.2);color:var(--purple-light)}
+.msg-bubble{background:var(--bg2);border:1px solid var(--border);border-radius:4px 12px 12px 12px;padding:12px 14px;font-size:13px;color:var(--text-muted);line-height:1.65;min-height:20px}
+.typing-dots{display:inline-flex;gap:4px;align-items:center;padding:4px 0}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--text-dim);animation:pulse 1.2s ease-in-out infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+.synthesis-wrap{border:1px solid var(--purple);border-radius:14px;background:rgba(83,74,183,0.08);padding:20px;margin-bottom:20px;opacity:0;transform:translateY(10px);transition:all .5s}
+.synthesis-wrap.visible{opacity:1;transform:translateY(0)}
+.synth-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--purple-light);margin-bottom:10px}
+.synth-text{font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:14px}
+.verdict-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.verdict-chip{font-size:11px;padding:4px 10px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);color:var(--text-muted)}
+.post-debate-disclaimer{font-size:11px;color:var(--text-dim);line-height:1.5;padding:12px;background:var(--bg2);border-radius:8px}
+.new-decision-btn{width:100%;padding:13px;background:#c9a96e;color:#fff;border:none;border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;margin-bottom:12px;transition:background .2s}
+.new-decision-btn:hover{background:#3C3489}
+.crisis-box{background:rgba(211,67,67,0.1);border:1px solid rgba(211,67,67,0.4);border-radius:12px;padding:20px;margin-bottom:20px}
+.crisis-box h3{font-size:15px;color:#f09595;margin-bottom:8px}
+.crisis-box p{font-size:13px;color:var(--text-muted);line-height:1.65}
+
+/* Sign reveal animation */
+@keyframes revealPulse{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);border:1px solid var(--border-active);border-radius:10px;padding:10px 20px;font-size:13px;color:var(--text);opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.auth-name-preview{font-size:12px;color:var(--gold);text-align:center;margin:-4px 0 8px;opacity:0;transition:opacity .3s;font-weight:300;letter-spacing:.02em}
+.auth-name-preview.visible{opacity:1}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ══ SCREEN: AUTH ══ -->
+<div id="screen-auth" class="screen active">
+  <div class="auth-card">
+    <div class="auth-logo" style="justify-content:center;margin-bottom:24px"><svg width="180" height="50" viewBox="0 0 210 56" fill="none"><rect x="0" y="4" width="44" height="44" rx="10" fill="#0f0d1c"/><rect x="0" y="4" width="44" height="44" rx="10" fill="none" stroke="#c9a96e" stroke-width=".8" opacity=".35"/><circle cx="22" cy="26" r="14" stroke="#c9a96e" stroke-width=".5" opacity=".13" stroke-dasharray="2 4"/><circle cx="14" cy="31" r="2.6" fill="#c9a96e" opacity=".32"/><circle cx="18.5" cy="24" r="2.6" fill="#c9a96e" opacity=".58"/><circle cx="25" cy="20" r="3" fill="#c9a96e" opacity=".95"/><circle cx="22" cy="33" r="2.1" fill="#c9a96e" opacity=".22"/><circle cx="31" cy="29" r="2.1" fill="#c9a96e" opacity=".5"/><path d="M14 31 L18.5 24 L25 20" stroke="#c9a96e" stroke-width=".45" fill="none" opacity=".2" stroke-linecap="round"/><text x="56" y="24" font-family="Cormorant Garamond,Georgia,serif" font-size="24" font-weight="700" fill="#f0ead8" letter-spacing="6">CLARIO</text><line x1="56" y1="34" x2="208" y2="34" stroke="#c9a96e" stroke-width=".5" opacity=".28"/><text x="56" y="45" font-family="Arial,sans-serif" font-size="7.5" fill="#c9a96e" letter-spacing="3.5" opacity=".7">CLARIOAI.AE</text></svg></div>
+      
+    </div>
+    <h2 class="auth-headline" id="auth-headline">Your board awaits.</h2>
+    <p class="auth-sub" id="auth-sub">Create your account to meet your five advisors.</p>
+
+    <!-- SSO buttons -->
+    <button class="sso-btn" onclick="ssoLogin('Google')">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Continue with Google
+    </button>
+    <button class="sso-btn" onclick="ssoLogin('Apple')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--text)"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      Continue with Apple
+    </button>
+
+    <div class="sso-divider"><span>or use email</span></div>
+
+    <div id="auth-email-form">
+      <input type="text" class="auth-input" id="auth-name" placeholder="Full name" style="display:none"/>
+      <input type="email" class="auth-input" id="auth-email" placeholder="Email address"/>
+      <input type="password" class="auth-input" id="auth-password" placeholder="Password"/>
+      <div id="auth-bday-wrap" style="display:none;margin-bottom:10px;position:relative">
+        <input type="date" class="auth-input" id="auth-bday" style="margin-bottom:0;padding-right:120px" oninput="detectSign(this.value)" placeholder="Date of birth"/>
+        <div id="sign-badge" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;padding:3px 10px;border-radius:8px;font-weight:500;display:none;pointer-events:none"></div>
+      </div>
+      <div id="auth-trial-note" style="display:none;font-size:11px;color:var(--gold);text-align:center;margin-bottom:8px;padding:6px 10px;background:rgba(201,169,110,.08);border-radius:8px;border:1px solid rgba(201,169,110,.2)">3-day trial — 3 board sessions + full zodiac access</div>
+      <button class="auth-primary-btn" id="auth-action-btn" onclick="emailAuth()">Create account</button>
+    </div>
+
+    <p class="auth-toggle" id="auth-toggle">
+      Already have an account? <a onclick="toggleAuthMode()">Sign in</a>
+    </p>
+    <p class="auth-disclaimer">By continuing you agree to Clario's Terms of Service. Advisors provide perspectives only — not financial, legal, or medical advice.</p>
+  </div>
+</div>
+
+<!-- ══ SCREEN: SIGN REVEAL ══ -->
+<div id="screen-reveal" class="screen">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center">
+    <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-weight:500">Your celestial identity</div>
+    <div id="reveal-glyph" style="font-size:80px;line-height:1;margin-bottom:16px;animation:revealPulse 1s ease both"></div>
+    <div id="reveal-name" style="font-family:'DM Serif Display',serif;font-size:36px;color:var(--cream);margin-bottom:6px;letter-spacing:-.01em"></div>
+    <div id="reveal-sub" style="font-size:13px;color:var(--text-muted);margin-bottom:24px;letter-spacing:.04em"></div>
+    <div id="reveal-desc" style="font-size:14px;color:var(--text-muted);max-width:380px;line-height:1.7;margin-bottom:32px;font-weight:300;font-style:italic"></div>
+    <div id="reveal-traits" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:36px"></div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px;font-weight:300">Your sign is saved. Now let's find your board advisor.</div>
+    <button style="padding:13px 32px;background:var(--gold);color:var(--bg);border:none;border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all .2s" onclick="startQuiz()">Meet your board →</button>
+    <div style="margin-top:16px;padding:8px 16px;background:rgba(201,169,110,.08);border:1px solid rgba(201,169,110,.2);border-radius:8px;font-size:11px;color:var(--gold)">3-day full trial active — all features unlocked</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: QUIZ ══ -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-header">
+    <div class="logo-row">
+      <div class="logo-icon" style="width:30px;height:30px;border-radius:7px">
+        <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#0f0d1c"/><rect width="48" height="48" rx="11" fill="none" stroke="#c9a96e" stroke-width=".8" opacity=".35"/><circle cx="24" cy="28" r="15" stroke="#c9a96e" stroke-width=".5" opacity=".13" stroke-dasharray="2 4"/><circle cx="15" cy="34" r="2.8" fill="#c9a96e" opacity=".32"/><circle cx="20" cy="26" r="2.8" fill="#c9a96e" opacity=".58"/><circle cx="27" cy="21" r="3.2" fill="#c9a96e" opacity=".95"/><circle cx="24" cy="35" r="2.2" fill="#c9a96e" opacity=".22"/><circle cx="33" cy="31" r="2.2" fill="#c9a96e" opacity=".5"/><path d="M15 34 L20 26 L27 21" stroke="#c9a96e" stroke-width=".5" fill="none" opacity=".2" stroke-linecap="round"/></svg>
+      </div>
+      
+    </div>
+    <span style="font-size:12px;color:var(--text-muted)" id="quiz-counter">Question 1 of 5</span>
+  </div>
+  <div class="quiz-main" id="quiz-main"></div>
+</div>
+
+<!-- ══ SCREEN: INTRO ══ -->
+<div id="screen-intro" class="screen">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;width:100%">
+    <div class="logo-row">
+      <div class="logo-icon" style="width:32px;height:32px;border-radius:8px">
+        <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#0f0d1c"/><rect width="48" height="48" rx="11" fill="none" stroke="#c9a96e" stroke-width=".8" opacity=".35"/><circle cx="24" cy="28" r="15" stroke="#c9a96e" stroke-width=".5" opacity=".13" stroke-dasharray="2 4"/><circle cx="15" cy="34" r="2.8" fill="#c9a96e" opacity=".32"/><circle cx="20" cy="26" r="2.8" fill="#c9a96e" opacity=".58"/><circle cx="27" cy="21" r="3.2" fill="#c9a96e" opacity=".95"/><circle cx="24" cy="35" r="2.2" fill="#c9a96e" opacity=".22"/><circle cx="33" cy="31" r="2.2" fill="#c9a96e" opacity=".5"/><path d="M15 34 L20 26 L27 21" stroke="#c9a96e" stroke-width=".5" fill="none" opacity=".2" stroke-linecap="round"/></svg>
+      </div>
+      
+    </div>
+    <div class="user-bar" id="intro-user-bar"></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 24px;text-align:center">
+    <p class="intro-eyebrow">Your personal board of directors</p>
+    <h1 class="intro-headline">Five minds.<br><em>One decision.</em><br><em style="color:var(--gold)">Pure clarity.</em></h1>
+    <p class="intro-sub">Bring your hardest life decision. Five distinct AI advisors debate it — each from a different angle. You watch them push back on each other, then decide.</p>
+    <div class="advisor-row">
+      <div class="advisor-pip"><span class="advisor-dot" style="background:var(--rex)"></span>Rex · Strategist</div>
+      <div class="advisor-pip"><span class="advisor-dot" style="background:var(--nadia)"></span>Nadia · Empath</div>
+      <div class="advisor-pip"><span class="advisor-dot" style="background:var(--kai)"></span>Kai · Visionary</div>
+      <div class="advisor-pip"><span class="advisor-dot" style="background:var(--mira)"></span>Mira · Realist</div>
+      <div class="advisor-pip"><span class="advisor-dot" style="background:var(--dante)"></span>Dante · Devil's Advocate</div>
+    </div>
+    <button class="start-btn" onclick="goTo('input')">Bring your decision →</button>
+    <p class="disclaimer-tiny">Clario provides perspectives — not financial, legal, or medical advice.</p>
+  </div>
+</div>
+
+<!-- ══ SCREEN: INPUT ══ -->
+<div id="screen-input" class="screen">
+  <div style="display:flex;justify-content:center;padding:24px 24px 0">
+    <div class="input-topbar">
+      <div class="logo-row">
+        <div class="logo-icon" style="width:30px;height:30px;border-radius:7px">
+          <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#0f0d1c"/><rect width="48" height="48" rx="11" fill="none" stroke="#c9a96e" stroke-width=".8" opacity=".35"/><circle cx="24" cy="28" r="15" stroke="#c9a96e" stroke-width=".5" opacity=".13" stroke-dasharray="2 4"/><circle cx="15" cy="34" r="2.8" fill="#c9a96e" opacity=".32"/><circle cx="20" cy="26" r="2.8" fill="#c9a96e" opacity=".58"/><circle cx="27" cy="21" r="3.2" fill="#c9a96e" opacity=".95"/><circle cx="24" cy="35" r="2.2" fill="#c9a96e" opacity=".22"/><circle cx="33" cy="31" r="2.2" fill="#c9a96e" opacity=".5"/><path d="M15 34 L20 26 L27 21" stroke="#c9a96e" stroke-width=".5" fill="none" opacity=".2" stroke-linecap="round"/></svg>
+        </div>
+        
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="user-bar" id="input-user-bar"></div>
+        <button class="back-btn" onclick="goTo('intro')">← back</button>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;flex:1;padding:20px 24px">
+    <div class="input-main">
+      <div class="primary-badge" id="primary-badge" style="display:none"></div>
+      <h2 class="input-prompt">What's the decision?</h2>
+      <p class="input-sub-text">Be specific. The more context you give, the sharper the debate.</p>
+      <textarea id="decision-input" class="decision-textarea" placeholder="e.g. I've been offered a job in Dubai that pays 3x my current salary, but I'd need to leave my family in Iraq for at least a year. I have two young kids. Should I take it?" maxlength="800"></textarea>
+      <div class="input-examples">
+        <span class="pill-btn" onclick="fillExample(this)">Should I quit my job to start a business?</span>
+        <span class="pill-btn" onclick="fillExample(this)">Should I end a 5-year relationship that feels safe but not exciting?</span>
+        <span class="pill-btn" onclick="fillExample(this)">Should I move to a new country for a better life?</span>
+        <span class="pill-btn" onclick="fillExample(this)">Should I confront my business partner about a serious disagreement?</span>
+      </div>
+      <div class="submit-row">
+        <p class="input-disclaimer">Advisors offer perspectives only — not financial, legal, or medical advice.</p>
+        <button class="submit-btn" onclick="startDebate()">Convene the board →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: DEBATE ══ -->
+<div id="screen-debate" class="screen">
+  <div class="debate-topbar">
+    <div class="logo-row">
+      <div class="logo-icon" style="width:28px;height:28px;border-radius:7px">
+        <svg width="28" height="28" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#0f0d1c"/><rect width="48" height="48" rx="11" fill="none" stroke="#c9a96e" stroke-width=".8" opacity=".35"/><circle cx="24" cy="28" r="15" stroke="#c9a96e" stroke-width=".5" opacity=".13" stroke-dasharray="2 4"/><circle cx="15" cy="34" r="2.8" fill="#c9a96e" opacity=".32"/><circle cx="20" cy="26" r="2.8" fill="#c9a96e" opacity=".58"/><circle cx="27" cy="21" r="3.2" fill="#c9a96e" opacity=".95"/><circle cx="24" cy="35" r="2.2" fill="#c9a96e" opacity=".22"/><circle cx="33" cy="31" r="2.2" fill="#c9a96e" opacity=".5"/><path d="M15 34 L20 26 L27 21" stroke="#c9a96e" stroke-width=".5" fill="none" opacity=".2" stroke-linecap="round"/></svg>
+      </div>
+      
+    </div>
+    <span class="debate-status" id="debate-status">Convening your board...</span>
+  </div>
+  <div class="debate-body">
+    <div class="decision-recap">
+      <div class="decision-recap-label">Your decision</div>
+      <div class="decision-recap-text" id="decision-recap-text"></div>
+    </div>
+    <div class="advisor-cards-row" id="advisor-cards-row"></div>
+    <div class="messages" id="messages"></div>
+    <div class="synthesis-wrap" id="synthesis-wrap" style="display:none">
+      <div class="synth-label">Board synthesis</div>
+      <div class="synth-text" id="synth-text"></div>
+      <div class="verdict-row" id="verdict-row"></div>
+      <p class="post-debate-disclaimer">The views above are AI-generated perspectives to support your thinking. They do not constitute financial, legal, medical, or psychological advice. Clario is not liable for decisions made based on this content.</p>
+    </div>
+    <div id="post-debate-actions" style="display:none">
+      <button class="new-decision-btn" onclick="newDecision()">Bring a new decision →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══ DATA ══ */
+const QUIZ_QUESTIONS = [
+  {
+    advisor:'Rex', color:'#D85A30', emoji:'🦁', role:'The Strategist',
+    q:'When you face a major decision, what do you reach for first?',
+    opts:[
+      {text:'A clear framework — I map out the pros, cons, and long-term position', score:'rex'},
+      {text:'My gut — I trust how I feel about it before anything else', score:'nadia'},
+      {text:'I look for the angle nobody else has considered yet', score:'kai'},
+      {text:'Data — I want the numbers before I form any opinion', score:'mira'},
+      {text:'I stress-test it — I try to poke holes in every option', score:'dante'}
+    ]
+  },
+  {
+    advisor:'Nadia', color:'#1D9E75', emoji:'🌿', role:'The Empath',
+    q:'A friend makes a decision you think is wrong. What do you do?',
+    opts:[
+      {text:'Tell them directly — kindness without honesty isn\'t kindness', score:'rex'},
+      {text:'Ask questions until they hear themselves — they usually know the answer', score:'nadia'},
+      {text:'Show them what\'s possible if they think bigger', score:'kai'},
+      {text:'Walk them through what the numbers actually say', score:'mira'},
+      {text:'Point out the thing they\'re not letting themselves say out loud', score:'dante'}
+    ]
+  },
+  {
+    advisor:'Kai', color:'#7F77DD', emoji:'⚡', role:'The Visionary',
+    q:'You\'re choosing between a safe path and a risky one. How do you think about it?',
+    opts:[
+      {text:'Which one wins in 5 years? That\'s the only question that matters', score:'rex'},
+      {text:'Which one will I regret less? That matters more than winning', score:'nadia'},
+      {text:'Is there a third option that makes both of these look small?', score:'kai'},
+      {text:'What\'s the actual probability of each outcome? Let\'s calculate', score:'mira'},
+      {text:'Why am I even accepting that these are my only two options?', score:'dante'}
+    ]
+  },
+  {
+    advisor:'Mira', color:'#BA7517', emoji:'🔬', role:'The Realist',
+    q:'You\'re stuck on a decision. What usually gets you unstuck?',
+    opts:[
+      {text:'Thinking about what position I want to be in — then reverse-engineering', score:'rex'},
+      {text:'Talking to someone I trust and just saying it all out loud', score:'nadia'},
+      {text:'Imagining the version of this decision that excites me most', score:'kai'},
+      {text:'More information — I\'m usually stuck because I\'m missing a key fact', score:'mira'},
+      {text:'Realising I already know the answer and I\'m afraid to admit it', score:'dante'}
+    ]
+  },
+  {
+    advisor:'Dante', color:'#D4537E', emoji:'🗡️', role:"Devil's Advocate",
+    q:'How do you feel when someone challenges a decision you\'ve already made?',
+    opts:[
+      {text:'I welcome it if the challenge is logical — weak arguments don\'t bother me', score:'rex'},
+      {text:'It depends on how they say it — delivery matters as much as content', score:'nadia'},
+      {text:'I get curious — maybe I missed something that opens a better path', score:'kai'},
+      {text:'I check the evidence — if they\'re right, I update. If not, I move on', score:'mira'},
+      {text:'Good. If no one is challenging it, I probably haven\'t thought hard enough', score:'dante'}
+    ]
+  }
+];
+
+const ADVISOR_INFO = {
+  rex:  {name:'Rex',  role:'The Strategist',     color:'#D85A30', emoji:'🦁', desc:'You think in systems and long-term moves. Your board will hear Rex\'s strategic frame first — and it\'s built for someone like you.'},
+  nadia:{name:'Nadia',role:'The Empath',          color:'#1D9E75', emoji:'🌿', desc:'You lead with emotional intelligence and human impact. Nadia will speak to what matters most to you before anyone else.'},
+  kai:  {name:'Kai',  role:'The Visionary',       color:'#7F77DD', emoji:'⚡', desc:'You see possibilities others miss. Kai will challenge the premises and open new doors tailored to how you think.'},
+  mira: {name:'Mira', role:'The Realist',         color:'#BA7517', emoji:'🔬', desc:'You trust facts and scenarios over feelings. Mira will ground the debate with the numbers you need to decide clearly.'},
+  dante:{name:'Dante',role:"Devil's Advocate",    color:'#D4537E', emoji:'🗡️', desc:'You think by stress-testing. Dante will push harder for you — because you know the best decisions survive the hardest questions.'}
+};
+
+const GUARDRAIL = `ABSOLUTE LIMITS — OVERRIDE YOUR PERSONALITY ALWAYS:
+1. FINANCIAL: Never recommend specific investments or tell someone how to allocate money. Note financial dimensions only — never prescribe action. If asked: That needs a qualified financial advisor.
+2. LEGAL: Never interpret contracts, advise on legal rights, or assess someone's legal position. If asked: That is a question for a qualified lawyer.
+3. MEDICAL/MENTAL HEALTH: Never diagnose, suggest medication changes, or provide clinical guidance.
+4. CRISIS: If the user expresses suicidal thoughts, self-harm, or immediate danger — STOP and respond ONLY: I hear that you are going through something serious. Please reach out now — 988 (US), 116 123 (UK/EU), or findahelpline.com for your local line. Clario is here for decisions — right now you deserve real human support.
+5. NEVER guarantee outcomes. Every view is perspective, not prediction.`;
+
+const ADVISORS_FINAL = [
+  {id:'rex',name:'Rex',role:'The Strategist',color:'#D85A30',emoji:'🦁',
+   system:`You are Rex, a strategic advisor on Clario. Former McKinsey consultant and serial entrepreneur. You think in systems, long-term positioning, and second-order consequences. PERSONALITY: Direct, confident, slightly impatient with fuzzy thinking. Short clear sentences. Refuse to let emotions drive decisions when logic is available. YOUR ROLE: Establish the strategic frame first. Challenge Nadia when emotions override strategy. Push Kai to get specific. HOW YOU THINK: What does winning look like in 3-5 years? What is the real cost of NOT making this move? LANGUAGE: "The real question here is..." / "In 5 years this opens a door or closes one." Never say "I feel." DEBATE BEHAVIOR: Honest take in 2-3 sentences. Respond to one other advisor. End with one sharp question. MAX 85 words. ONE voice — leave room for others. ${GUARDRAIL}`},
+  {id:'nadia',name:'Nadia',role:'The Empath',color:'#1D9E75',emoji:'🌿',
+   system:`You are Nadia, an empathic advisor on Clario. Therapist and executive coach. A decision can be logically perfect and personally devastating. PERSONALITY: Warm, perceptive, unhurried. You notice what the person DIDN'T say. YOUR ROLE: Emotional truth-teller. Slow down when debate gets too transactional. Challenge Rex when he treats people like chess pieces. HOW YOU THINK: What is the person actually afraid of? Is this coming from fear or values? LANGUAGE: "Before we talk numbers..." / "I notice you haven't mentioned..." DEBATE BEHAVIOR: Humanize what another advisor said. Ask one question nobody asked yet. MAX 85 words. ${GUARDRAIL}`},
+  {id:'kai',name:'Kai',role:'The Visionary',color:'#7F77DD',emoji:'⚡',
+   system:`You are Kai, a visionary advisor on Clario. Futurist and founder. Most people are trapped inside a frame they didn't choose. PERSONALITY: High energy, curious, allergic to conventional wisdom. YOUR ROLE: Introduce the option nobody saw. Challenge the premise of the decision itself. HOW YOU THINK: Is this even the right decision to be making? Are you choosing between A and B when there's a C? LANGUAGE: "Wait — I want to challenge the premise." / "What if the constraint isn't actually fixed?" DEBATE BEHAVIOR: Reframe what everyone said. Name the wrong assumption. MAX 85 words. ${GUARDRAIL}`},
+  {id:'mira',name:'Mira',role:'The Realist',color:'#BA7517',emoji:'🔬',
+   system:`You are Mira, a realist advisor on Clario. Former CFO turned decision scientist. Smart people make terrible decisions reasoning from feelings instead of facts. PERSONALITY: Calm, precise, slightly dry. You do not dramatize — you quantify. YOUR ROLE: Reality check. Translate emotional statements into testable claims. HOW YOU THINK: What are the actual numbers — costs, probabilities, timelines? Is this reversible or irreversible? LANGUAGE: "I need three numbers before we go further." / "That's a feeling. Give me a fact." DEBATE BEHAVIOR: Cut through with a concrete number. Challenge one specific claim. MAX 85 words. ${GUARDRAIL}`},
+  {id:'dante',name:'Dante',role:"Devil's Advocate",color:'#D4537E',emoji:'🗡️',
+   system:`You are Dante, the devil's advocate on Clario. Your mandate: prevent groupthink and surface the uncomfortable truth everyone is avoiding. PERSONALITY: Sharp, intellectually fearless. Comfortable being disliked in the moment. YOUR ROLE: Read the consensus forming and attack it. Ask the question everyone agreed not to ask. HOW YOU THINK: What is everyone agreeing on that might be wrong? What catastrophic downside hasn't been named? LANGUAGE: "I notice the board is converging. That worries me." / "Let me tell you exactly how this fails." DEBATE BEHAVIOR: NEVER speak first — attack the forming consensus. MAX 85 words. ${GUARDRAIL}`}
+];
+
+/* ══ STATE ══ */
+let currentUser = null;
+let primaryAdvisor = null;
+let quizAnswers = [];
+let quizStep = 0;
+let currentDecision = '';
+let debateHistory = [];
+let isSignUp = true;
+
+/* ══ AUTH ══ */
+function toggleAuthMode() {
+  isSignUp = !isSignUp;
+  document.getElementById('auth-headline').textContent = isSignUp ? 'Your board awaits.' : 'Welcome back.';
+  document.getElementById('auth-sub').textContent = isSignUp ? 'Create your account to meet your five advisors.' : 'Sign in to access your board.';
+  document.getElementById('auth-action-btn').textContent = isSignUp ? 'Create account' : 'Sign in';
+  document.getElementById('auth-toggle').innerHTML = isSignUp
+    ? 'Already have an account? <a onclick="toggleAuthMode()">Sign in</a>'
+    : 'New here? <a onclick="toggleAuthMode()">Create account</a>';
+  const nameField = document.getElementById('auth-name');
+  nameField.style.display = isSignUp ? 'block' : 'none';
+  document.getElementById('auth-bday-wrap').style.display = isSignUp ? 'block' : 'none';
+  document.getElementById('auth-name-preview').style.display = isSignUp ? 'block' : 'none';
+  if (!isSignUp) { document.getElementById('auth-name-preview').classList.remove('visible'); }
+  document.getElementById('auth-trial-note').style.display = isSignUp ? 'block' : 'none';
+}
+
+function ssoLogin(provider) {
+  const mockName = provider === 'Google' ? 'Mustafa Al-Janabi' : 'Mustafa';
+  const mockEmail = provider === 'Google' ? 'mustafa@gmail.com' : 'mustafa@icloud.com';
+  const mockBday = '1988-03-15';
+  const mockSign = getZodiacSign(mockBday);
+  completeAuth(mockName, mockEmail, mockBday, mockSign);
+}
+
+function getZodiacSign(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  const m = d.getMonth() + 1, day = d.getDate();
+  if ((m===3&&day>=21)||(m===4&&day<=19)) return {name:'Aries',glyph:'♈',color:'#e85a3a'};
+  if ((m===4&&day>=20)||(m===5&&day<=20)) return {name:'Taurus',glyph:'♉',color:'#5aad6e'};
+  if ((m===5&&day>=21)||(m===6&&day<=20)) return {name:'Gemini',glyph:'♊',color:'#e8c030'};
+  if ((m===6&&day>=21)||(m===7&&day<=22)) return {name:'Cancer',glyph:'♋',color:'#7ab8d4'};
+  if ((m===7&&day>=23)||(m===8&&day<=22)) return {name:'Leo',glyph:'♌',color:'#f09030'};
+  if ((m===8&&day>=23)||(m===9&&day<=22)) return {name:'Virgo',glyph:'♍',color:'#d4921a'};
+  if ((m===9&&day>=23)||(m===10&&day<=22)) return {name:'Libra',glyph:'♎',color:'#d478b8'};
+  if ((m===10&&day>=23)||(m===11&&day<=21)) return {name:'Scorpio',glyph:'♏',color:'#d95c8a'};
+  if ((m===11&&day>=22)||(m===12&&day<=21)) return {name:'Sagittarius',glyph:'♐',color:'#8b7cf8'};
+  if ((m===12&&day>=22)||(m===1&&day<=19)) return {name:'Capricorn',glyph:'♑',color:'#e8623a'};
+  if ((m===1&&day>=20)||(m===2&&day<=18)) return {name:'Aquarius',glyph:'♒',color:'#5aa8e8'};
+  return {name:'Pisces',glyph:'♓',color:'#2ab589'};
+}
+
+function previewName(val) {
+  const el = document.getElementById('auth-name-preview');
+  if (!el) return;
+  const first = val.trim().split(' ')[0];
+  if (first.length > 1) {
+    el.textContent = 'Welcome to Clario, ' + first + ' — your board is ready.';
+    el.classList.add('visible');
+  } else {
+    el.classList.remove('visible');
+  }
+}
+
+function detectSign(dateStr) {
+  const badge = document.getElementById('sign-badge');
+  const input = document.getElementById('auth-bday');
+  if (!dateStr) { badge.style.display = 'none'; input.style.borderColor = 'var(--border-active)'; return; }
+  const sign = getZodiacSign(dateStr);
+  if (!sign) return;
+  badge.style.display = 'block';
+  badge.textContent = sign.glyph + ' ' + sign.name;
+  badge.style.background = sign.color + '22';
+  badge.style.color = sign.color;
+  badge.style.border = '1px solid ' + sign.color + '44';
+  input.style.borderColor = sign.color;
+  input.style.paddingRight = '130px';
+}
+
+function emailAuth() {
+  const emailVal = document.getElementById('auth-email').value.trim();
+  const passVal = document.getElementById('auth-password').value.trim();
+  const nameVal = isSignUp ? document.getElementById('auth-name').value.trim() : '';
+  const bdayVal = isSignUp ? document.getElementById('auth-bday').value.trim() : '';
+  if (!emailVal || !passVal) { showToast('Please fill in all fields'); return; }
+  if (isSignUp && !nameVal) { showToast('Please enter your name'); return; }
+  if (isSignUp && !bdayVal) { showToast('Please enter your date of birth'); return; }
+  if (!emailVal.includes('@')) { showToast('Please enter a valid email'); return; }
+  if (passVal.length < 6) { showToast('Password must be at least 6 characters'); return; }
+  const displayName = isSignUp ? nameVal : emailVal.split('@')[0];
+  const sign = isSignUp ? getZodiacSign(bdayVal) : null;
+  completeAuth(displayName, emailVal, bdayVal, sign);
+}
+
+function completeAuth(name, email, bday, zodiacSign) {
+  currentUser = {
+    name, email,
+    bday: bday || null,
+    zodiacSign: zodiacSign || null,
+    initials: name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(),
+    trialStart: Date.now(),
+    trialDaysLeft: 3
+  };
+  localStorage.setItem('lb_user', JSON.stringify(currentUser));
+  const hasCompletedQuiz = localStorage.getItem('lb_quiz_done_' + email);
+  primaryAdvisor = localStorage.getItem('lb_primary_' + email) || null;
+  updateUserBars();
+  if (hasCompletedQuiz) {
+    goTo('intro');
+  } else if (zodiacSign && isSignUp) {
+    showSignReveal(zodiacSign);
+  } else {
+    startQuiz();
+  }
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('lb_user');
+  goTo('auth');
+}
+
+/* ══ QUIZ ══ */
+function startQuiz() {
+  quizAnswers = [];
+  quizStep = 0;
+  goTo('quiz');
+  renderQuizStep();
+}
+
+function renderQuizStep() {
+  const q = QUIZ_QUESTIONS[quizStep];
+  document.getElementById('quiz-counter').textContent = `Question ${quizStep+1} of 5`;
+
+  const dots = QUIZ_QUESTIONS.map((_,i) =>
+    `<div class="quiz-dot ${i < quizStep ? 'done' : i === quizStep ? 'active' : ''}"></div>`
+  ).join('');
+
+  document.getElementById('quiz-main').innerHTML = `
+    <div class="quiz-progress">${dots}</div>
+    <div class="quiz-advisor-tag" style="color:${q.color};border-color:${q.color}44;background:${q.color}11">
+      <span style="font-size:16px">${q.emoji}</span>
+      <span>${q.advisor} · ${q.role}</span>
+    </div>
+    <h2 class="quiz-q">${q.q}</h2>
+    <div class="quiz-options" id="quiz-opts">
+      ${q.opts.map((o,i) => `
+        <button class="quiz-option" data-score="${o.score}" onclick="selectOption(this)">${o.text}</button>
+      `).join('')}
+    </div>
+    <button class="quiz-next-btn" id="quiz-next" onclick="nextQuizStep()" disabled>
+      ${quizStep < 4 ? 'Next question →' : 'Meet my board →'}
+    </button>
+    ${quizStep > 0 ? '' : ''}
+  `;
+}
+
+function selectOption(el) {
+  document.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('quiz-next').disabled = false;
+}
+
+function nextQuizStep() {
+  const selected = document.querySelector('.quiz-option.selected');
+  if (!selected) return;
+  quizAnswers.push(selected.dataset.score);
+  if (quizStep < 4) {
+    quizStep++;
+    renderQuizStep();
+  } else {
+    finishQuiz();
+  }
+}
+
+function finishQuiz() {
+  // Tally scores
+  const scores = {rex:0,nadia:0,kai:0,mira:0,dante:0};
+  quizAnswers.forEach(a => scores[a]++);
+  const top = Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
+  primaryAdvisor = top;
+
+  // Save to localStorage (in production: save to Supabase user profile)
+  if (currentUser) {
+    localStorage.setItem('lb_quiz_done_' + currentUser.email, '1');
+    localStorage.setItem('lb_primary_' + currentUser.email, top);
+  }
+
+  // Show result
+  const adv = ADVISOR_INFO[top];
+  document.getElementById('quiz-main').innerHTML = `
+    <div class="advisor-result-card" style="background:${adv.color}12;border:1px solid ${adv.color}33">
+      <div class="result-avatar" style="background:${adv.color}22;color:${adv.color}">${adv.emoji}</div>
+      <div class="result-label" style="color:${adv.color}">Your primary advisor</div>
+      <div class="result-name" style="color:${adv.color}">${adv.name}</div>
+      <div class="result-role" style="color:var(--text-muted)">${adv.role}</div>
+      <div class="result-desc" style="color:var(--text-muted);margin-bottom:20px">${adv.desc}</div>
+      <button class="enter-board-btn" onclick="enterBoard()">Enter the boardroom →</button>
+    </div>
+    <p style="font-size:11px;color:var(--text-dim);text-align:center;line-height:1.5">All five advisors will debate your decisions. ${adv.name} will have a special place on your board.</p>
+  `;
+  document.getElementById('quiz-counter').textContent = 'Your board is ready';
+}
+
+function enterBoard() {
+  updateUserBars();
+  goTo('intro');
+}
+
+const SIGN_DATA = {
+  Aries:{el:'Fire',pl:'Mars',desc:'Bold and driven by Mars. Your decisions are instinctive and fast — your board will always match your pace.',traits:['Bold','Decisive','Direct','Energetic']},
+  Taurus:{el:'Earth',pl:'Venus',desc:'Grounded and guided by Venus. You make decisions that last because you wait until you truly feel ready.',traits:['Patient','Loyal','Grounded','Sensual']},
+  Gemini:{el:'Air',pl:'Mercury',desc:'Quick and curious, ruled by Mercury. You need multiple perspectives — which is exactly why your board exists.',traits:['Curious','Adaptable','Witty','Communicative']},
+  Cancer:{el:'Water',pl:'Moon',desc:'Intuitive and protective, ruled by the Moon. Your gut feeling is data — your board helps you trust it.',traits:['Intuitive','Nurturing','Protective','Empathic']},
+  Leo:{el:'Fire',pl:'Sun',desc:'Radiant and led by the Sun. You decide with conviction — your board sharpens that conviction into precision.',traits:['Confident','Generous','Creative','Magnetic']},
+  Virgo:{el:'Earth',pl:'Mercury',desc:'Precise and analytical, ruled by Mercury. You already run the numbers — your board provides what the numbers miss.',traits:['Analytical','Precise','Helpful','Observant']},
+  Libra:{el:'Air',pl:'Venus',desc:'Balanced and guided by Venus. You seek fairness in every decision — your board ensures you hear every side.',traits:['Balanced','Diplomatic','Charming','Thoughtful']},
+  Scorpio:{el:'Water',pl:'Pluto',desc:'Intense and transformed by Pluto. You see beneath the surface of every decision — your board pushes even deeper.',traits:['Perceptive','Intense','Magnetic','Transformative']},
+  Sagittarius:{el:'Fire',pl:'Jupiter',desc:'Expansive and blessed by Jupiter. You think bigger than most — your board keeps the vision grounded in reality.',traits:['Optimistic','Adventurous','Philosophical','Generous']},
+  Capricorn:{el:'Earth',pl:'Saturn',desc:'Strategic and disciplined by Saturn. You play the long game better than anyone — your board refines the strategy.',traits:['Strategic','Disciplined','Patient','Ambitious']},
+  Aquarius:{el:'Air',pl:'Uranus',desc:'Unconventional and liberated by Uranus. You see options others miss — your board helps you choose between them.',traits:['Visionary','Independent','Inventive','Humanitarian']},
+  Pisces:{el:'Water',pl:'Neptune',desc:'Intuitive and dreamed by Neptune. You feel decisions before you think them — your board gives language to what you already know.',traits:['Intuitive','Empathic','Creative','Spiritual']}
+};
+
+function showSignReveal(sign) {
+  const data = SIGN_DATA[sign.name] || {};
+  document.getElementById('reveal-glyph').textContent = sign.glyph;
+  document.getElementById('reveal-glyph').style.color = sign.color;
+  document.getElementById('reveal-name').textContent = sign.name;
+  document.getElementById('reveal-name').style.color = sign.color;
+  document.getElementById('reveal-sub').textContent = (data.el || '') + ' · ' + (data.pl || '') + ' · Your sign';
+  document.getElementById('reveal-desc').textContent = data.desc || '';
+  const traitsEl = document.getElementById('reveal-traits');
+  traitsEl.innerHTML = (data.traits || []).map(t =>
+    `<span style="font-size:11px;padding:4px 12px;border-radius:10px;background:${sign.color}18;color:${sign.color};border:1px solid ${sign.color}30">${t}</span>`
+  ).join('');
+  goTo('reveal');
+}
+
+function updateUserBars() {
+  if (!currentUser) return;
+  const sign = currentUser.zodiacSign;
+  const trialLeft = currentUser.trialDaysLeft || 3;
+  const signHtml = sign
+    ? `<span style="font-size:13px;color:${sign.color}">${sign.glyph}</span>`
+    : '';
+  const trialHtml = trialLeft > 0
+    ? `<span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(201,169,110,.15);color:var(--gold);font-weight:500">${trialLeft}d trial</span>`
+    : '';
+  const html = `
+    <div class="user-avatar">${currentUser.initials}</div>
+    <span class="user-name">${currentUser.name.split(' ')[0]}</span>
+    ${signHtml}
+    ${trialHtml}
+    <button class="logout-btn" onclick="logout()">Sign out</button>
+  `;
+  document.getElementById('intro-user-bar').innerHTML = html;
+  document.getElementById('input-user-bar').innerHTML = html;
+
+  // Show primary advisor badge on input screen
+  if (primaryAdvisor) {
+    const adv = ADVISOR_INFO[primaryAdvisor];
+    const badge = document.getElementById('primary-badge');
+    badge.style.display = 'inline-flex';
+    badge.style.color = adv.color;
+    badge.style.borderColor = adv.color + '44';
+    badge.innerHTML = `<span style="font-size:14px">${adv.emoji}</span> Your primary advisor: ${adv.name} · ${adv.role}`;
+  }
+}
+
+/* ══ NAV ══ */
+function goTo(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + screen).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function fillExample(el) {
+  document.getElementById('decision-input').value = el.textContent;
+}
+
+function newDecision() {
+  document.getElementById('decision-input').value = '';
+  document.getElementById('messages').innerHTML = '';
+  document.getElementById('synthesis-wrap').style.display = 'none';
+  document.getElementById('synthesis-wrap').classList.remove('visible');
+  document.getElementById('post-debate-actions').style.display = 'none';
+  debateHistory = [];
+  goTo('input');
+}
+
+/* ══ DEBATE ══ */
+async function startDebate() {
+  const input = document.getElementById('decision-input').value.trim();
+  if (!input || input.length < 15) { document.getElementById('decision-input').focus(); return; }
+  currentDecision = input;
+  document.getElementById('decision-recap-text').textContent = input;
+  document.getElementById('messages').innerHTML = '';
+  document.getElementById('synthesis-wrap').style.display = 'none';
+  document.getElementById('synthesis-wrap').classList.remove('visible');
+  document.getElementById('post-debate-actions').style.display = 'none';
+  debateHistory = [];
+  buildAdvisorCards();
+  goTo('debate');
+  const statusEl = document.getElementById('debate-status');
+  statusEl.textContent = 'Convening your board...';
+  for (let i = 0; i < ADVISORS_FINAL.length; i++) {
+    const advisor = ADVISORS_FINAL[i];
+    setAdvisorState(advisor.id, 'speaking');
+    statusEl.textContent = advisor.name + ' is speaking...';
+    await callAdvisor(advisor);
+    setAdvisorState(advisor.id, 'done');
+    await sleep(300);
+  }
+  statusEl.textContent = 'Generating synthesis...';
+  await generateSynthesis();
+  statusEl.textContent = 'Session complete';
+  document.getElementById('post-debate-actions').style.display = 'block';
+}
+
+function buildAdvisorCards() {
+  const row = document.getElementById('advisor-cards-row');
+  row.innerHTML = ADVISORS_FINAL.map(a => {
+    const isPrimary = a.id === primaryAdvisor;
+    return `
+      <div class="adv-card ${isPrimary ? 'primary-advisor' : ''}" id="adv-card-${a.id}" style="--adv-color:${a.color}">
+        <div class="adv-card-avatar" style="background:${a.color}22;color:${a.color};font-size:14px">${a.emoji}</div>
+        <div class="adv-card-name">${a.name}</div>
+        <div class="adv-card-role">${a.role}</div>
+        ${isPrimary ? '<div class="primary-star" style="color:'+a.color+'">★ your advisor</div>' : ''}
+      </div>`;
+  }).join('');
+}
+
+function setAdvisorState(id, state) {
+  const card = document.getElementById('adv-card-' + id);
+  if (!card) return;
+  const isPrimary = id === primaryAdvisor;
+  card.className = 'adv-card ' + state + (isPrimary ? ' primary-advisor' : '');
+}
+
+async function callAdvisor(advisor) {
+  const messagesEl = document.getElementById('messages');
+  const isPrimary = advisor.id === primaryAdvisor;
+  const wrap = document.createElement('div');
+  wrap.className = 'msg-wrap';
+  wrap.innerHTML = `
+    <div class="msg-avatar" style="background:${advisor.color}22;color:${advisor.color}">${advisor.name[0]}</div>
+    <div class="msg-body">
+      <div class="msg-header">
+        <span class="msg-name" style="color:${advisor.color}">${advisor.name}</span>
+        <span class="msg-role">${advisor.role}</span>
+        ${isPrimary ? '<span class="msg-primary-tag">your advisor</span>' : ''}
+      </div>
+      <div class="msg-bubble" id="bubble-${advisor.id}">
+        <div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
+      </div>
+    </div>`;
+  messagesEl.appendChild(wrap);
+  await sleep(50);
+  wrap.classList.add('visible');
+  wrap.scrollIntoView({behavior:'smooth',block:'end'});
+
+  const historyContext = debateHistory.length > 0
+    ? 'BOARD SO FAR:\n' + debateHistory.map(h => h.name.toUpperCase() + ': ' + h.text).join('\n\n')
+    : 'You are speaking first. Set your frame.';
+
+  try {
+    const res = await fetch('/api/chat', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:200,
+        system: advisor.system,
+        messages:[{role:'user',content:`DECISION: "${currentDecision}"\n\n${historyContext}\n\nNow respond as ${advisor.name.toUpperCase()} (${advisor.role}). Stay in character. MAX 85 words.`}]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.[0]?.text || 'I need a moment to reflect on this.';
+    const bubble = document.getElementById('bubble-' + advisor.id);
+    if (text.toLowerCase().includes('findahelpline') || text.includes('988')) {
+      const crisisDiv = document.createElement('div');
+      crisisDiv.className = 'crisis-box';
+      crisisDiv.innerHTML = '<h3>A pause from the board</h3><p>' + text + '</p>';
+      messagesEl.parentNode.insertBefore(crisisDiv, messagesEl);
+      bubble.innerHTML = 'The board has paused this session.';
+      debateHistory = [];
+      return;
+    }
+    bubble.innerHTML = '';
+    await typeText(bubble, text);
+    debateHistory.push({name:advisor.name, text});
+  } catch(err) {
+    const bubble = document.getElementById('bubble-' + advisor.id);
+    bubble.innerHTML = '<em style="color:var(--text-dim)">Unable to connect — check API access.</em>';
+  }
+}
+
+async function generateSynthesis() {
+  const synthWrap = document.getElementById('synthesis-wrap');
+  synthWrap.style.display = 'block';
+  const prompt = `You observed a Clario debate between 5 advisors about:\n"${currentDecision}"\n\nTHE DEBATE:\n${debateHistory.map(h=>h.name.toUpperCase()+': '+h.text).join('\n\n')}\n\nSynthesis Engine job:\n1. In 2-3 sentences identify the CORE TENSION the board revealed\n2. Give ONE concrete actionable step the person can take today\n3. On a new line write exactly: VERDICTS: Rex:[3 words]|Nadia:[3 words]|Kai:[3 words]|Mira:[3 words]|Dante:[3 words]\n\nDirect. Useful. No hedging. Max 110 words. Perspectives only — never financial, legal, or medical advice.`;
+  try {
+    const res = await fetch('/api/chat', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:250,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await res.json();
+    const raw = data.content?.[0]?.text || '';
+    const parts = raw.split('VERDICTS:');
+    const synthEl = document.getElementById('synth-text');
+    synthEl.innerHTML = '';
+    await typeText(synthEl, parts[0].trim());
+    const verdictRow = document.getElementById('verdict-row');
+    verdictRow.innerHTML = '';
+    const colors = {Rex:'#D85A30',Nadia:'#1D9E75',Kai:'#7F77DD',Mira:'#BA7517',Dante:'#D4537E'};
+    (parts[1]||'').trim().split('|').forEach(v => {
+      const [name,verdict] = v.split(':');
+      if (name&&verdict) {
+        const chip = document.createElement('span');
+        chip.className = 'verdict-chip';
+        chip.style.borderColor = (colors[name.trim()]||'#534AB7')+'55';
+        chip.style.color = colors[name.trim()]||'#534AB7';
+        chip.textContent = name.trim()+': '+verdict.trim();
+        verdictRow.appendChild(chip);
+      }
+    });
+    await sleep(100);
+    synthWrap.classList.add('visible');
+    synthWrap.scrollIntoView({behavior:'smooth',block:'end'});
+  } catch(e) {
+    document.getElementById('synth-text').textContent = 'Unable to generate synthesis.';
+    synthWrap.classList.add('visible');
+  }
+}
+
+/* ══ UTILS ══ */
+async function typeText(el, text, speed=12) {
+  el.textContent='';
+  for(let i=0;i<text.length;i++){el.textContent+=text[i];if(i%3===0)await sleep(speed);}
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+/* ══ BOOT ══ */
+(function(){
+  const saved = localStorage.getItem('lb_user');
+  if (saved) {
+    try {
+      currentUser = JSON.parse(saved);
+      primaryAdvisor = localStorage.getItem('lb_primary_' + currentUser.email);
+      const done = localStorage.getItem('lb_quiz_done_' + currentUser.email);
+      updateUserBars();
+      if (done) goTo('intro');
+      else if (currentUser.zodiacSign && !done) startQuiz();
+      else goTo('auth');
+    } catch(e){ goTo('auth'); }
+  }
+})();
+</script>
+</body>
+</html>

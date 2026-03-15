@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLARIO — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08070f;--bg2:#0f0d1c;--bg3:#161328;--bg4:#1c1935;
+  --gold:#c9a96e;--gold-dim:#8a7048;--gold-soft:rgba(201,169,110,0.1);
+  --cream:#f0ead8;--cream-dim:#a89d87;
+  --purple:#6b5ce7;--navy:#1a1642;--clario-gold:#c9a96e;--purple-soft:#9d8ff5;
+  --border:rgba(201,169,110,0.1);--border-bright:rgba(201,169,110,0.22);
+  --rex:#e8623a;--nadia:#2ab589;--kai:#8b7cf8;--mira:#d4921a;--dante:#d95c8a;
+  --text:#f0ead8;--text-muted:#8a8098;--text-dim:#4a4460;
+  --success:#2ab589;--danger:#d95c8a;--info:#8b7cf8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;overflow-x:hidden}
+
+/* ── LAYOUT ── */
+.app{display:flex;min-height:100vh}
+.sidebar{
+  width:240px;flex-shrink:0;background:var(--bg2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;height:100vh;z-index:50;
+  transition:transform .3s;
+}
+.main{margin-left:240px;flex:1;min-height:100vh;display:flex;flex-direction:column}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+}
+
+/* ── SIDEBAR ── */
+.sidebar-logo{
+  padding:24px 20px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+}
+.sidebar-logo-icon{width:32px;height:32px;border-radius:8px;background:#1a1642;border:1px solid rgba(201,169,110,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sidebar-logo-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--cream);letter-spacing:.02em}
+.sidebar-nav{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:2px}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:9px 12px;
+  border-radius:8px;cursor:pointer;transition:all .2s;
+  font-size:13px;color:var(--text-muted);letter-spacing:.02em;border:none;background:transparent;
+  font-family:'Outfit',sans-serif;width:100%;text-align:left;
+}
+.nav-item:hover{background:var(--bg3);color:var(--cream)}
+.nav-item.active{background:rgba(201,169,110,0.08);color:#c9a96e;border:1px solid rgba(201,169,110,0.25)}
+.nav-item svg{flex-shrink:0;opacity:.7}
+.nav-item.active svg{opacity:1}
+.nav-section-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);padding:14px 12px 6px;font-weight:500}
+.sidebar-bottom{padding:16px 12px;border-top:1px solid var(--border)}
+.sidebar-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:var(--bg3);border:1px solid var(--border)}
+.sidebar-avatar{width:34px;height:34px;border-radius:50%;background:#1a1642;border:1px solid rgba(201,169,110,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#fff;flex-shrink:0}
+.sidebar-user-info{flex:1;min-width:0}
+.sidebar-user-name{font-size:13px;color:var(--cream);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-user-plan{font-size:10px;color:var(--gold);letter-spacing:.04em}
+.sidebar-signout{background:none;border:none;cursor:pointer;color:var(--text-dim);padding:2px;transition:color .2s}
+.sidebar-signout:hover{color:var(--text-muted)}
+
+/* ── TOPBAR ── */
+.topbar{
+  height:60px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;background:var(--bg);position:sticky;top:0;z-index:40;
+}
+.topbar-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;color:var(--cream);font-weight:400;letter-spacing:-.01em}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.credit-badge{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 14px;border-radius:20px;
+  border:1px solid var(--border-bright);background:var(--gold-soft);
+  font-size:12px;color:var(--gold);cursor:pointer;transition:all .2s;
+}
+.credit-badge:hover{border-color:var(--gold)}
+.credit-dot{width:6px;height:6px;border-radius:50%;background:#c9a96e;animation:pulse-c 2s infinite}
+@keyframes pulse-c{0%,100%{opacity:.4}50%{opacity:1}}
+.new-session-btn{
+  padding:8px 18px;background:#c9a96e;color:#08070f;
+  border:none;border-radius:7px;font-size:13px;font-family:'Outfit',sans-serif;
+  font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.new-session-btn:hover{background:var(--cream)}
+.mobile-menu-btn{display:none;background:none;border:none;color:var(--text-muted);cursor:pointer;padding:4px}
+@media(max-width:768px){.mobile-menu-btn{display:flex}}
+
+/* ── PAGE CONTENT ── */
+.page{display:none;padding:28px;animation:fadeIn .3s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CARDS ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px}
+.card-gold{border-color:var(--border-bright)}
+.card h3{font-size:14px;font-weight:500;color:var(--cream);margin-bottom:4px}
+.card p{font-size:13px;color:var(--text-muted);font-weight:300}
+.section-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:12px;display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:900px){.grid4{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}.grid4{grid-template-columns:1fr 1fr}}
+
+/* METRIC CARD */
+.metric-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px}
+.metric-label{font-size:11px;color:var(--text-dim);letter-spacing:.04em;margin-bottom:6px;font-weight:500}
+.metric-val{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--cream);font-weight:300;line-height:1;margin-bottom:4px}
+.metric-sub{font-size:11px;color:var(--text-muted)}
+.metric-change{font-size:11px;padding:2px 7px;border-radius:6px;margin-top:6px;display:inline-block}
+.up{background:rgba(42,181,137,0.12);color:#2ab589}
+.down{background:rgba(217,92,138,0.12);color:#d95c8a}
+
+/* CREDIT BAR */
+.credit-bar-wrap{margin-bottom:20px}
+.credit-bar-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.credit-bar-label{font-size:13px;font-weight:500;color:var(--cream)}
+.credit-bar-num{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold)}
+.credit-bar-track{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.credit-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#8a7048,#c9a96e);transition:width .8s ease}
+
+/* HISTORY TABLE */
+.history-list{display:flex;flex-direction:column;gap:0}
+.history-item{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 0;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:all .15s;
+}
+.history-item:last-child{border-bottom:none}
+.history-item:hover{padding-left:4px}
+.history-num{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:13px;
+  flex-shrink:0;margin-top:2px;
+}
+.history-body{flex:1}
+.history-decision{font-size:13px;color:var(--cream);line-height:1.4;margin-bottom:5px}
+.history-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.history-date{font-size:11px;color:var(--text-dim)}
+.history-verdict-pills{display:flex;gap:5px;flex-wrap:wrap}
+.vpill{font-size:10px;padding:2px 8px;border-radius:6px}
+.history-expand{font-size:11px;color:var(--text-dim);flex-shrink:0;margin-top:4px;transition:all .2s}
+.history-item:hover .history-expand{color:var(--gold)}
+.history-detail{
+  display:none;margin-top:12px;padding:14px;
+  background:var(--bg3);border-radius:8px;border:1px solid var(--border);
+}
+.history-detail.open{display:block}
+.hd-synthesis{font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:12px;font-weight:300;font-style:italic}
+.hd-advisor-row{display:flex;flex-direction:column;gap:8px}
+.hd-msg{display:flex;gap:9px}
+.hd-av{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500}
+.hd-msg-body{flex:1}
+.hd-msg-name{font-size:10px;font-weight:500;letter-spacing:.04em;margin-bottom:2px}
+.hd-msg-text{font-size:12px;color:var(--text-muted);line-height:1.55;font-weight:300}
+
+/* ADVISOR AFFINITY */
+.affinity-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px}
+.affinity-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:14px 10px;text-align:center;
+  transition:border-color .2s;
+}
+.affinity-card:hover{border-color:var(--border-bright)}
+.affinity-sigil{font-size:22px;margin-bottom:8px;line-height:1}
+.affinity-name{font-size:12px;font-weight:500;margin-bottom:4px}
+.affinity-bar-track{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-bottom:5px}
+.affinity-bar-fill{height:100%;border-radius:2px;transition:width 1s ease}
+.affinity-pct{font-size:10px;color:var(--text-dim)}
+
+/* QUIZ PAGE */
+.quiz-progress-bar{height:3px;background:var(--bg3);border-radius:2px;margin-bottom:28px;overflow:hidden}
+.quiz-progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .4s ease}
+.quiz-card{max-width:600px;margin:0 auto}
+.quiz-advisor-tag{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;border:1px solid;font-size:12px;margin-bottom:16px;letter-spacing:.03em}
+.quiz-question{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--cream);font-weight:300;line-height:1.3;margin-bottom:24px}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.quiz-opt{
+  padding:14px 16px;border-radius:10px;border:1px solid var(--border);
+  background:var(--bg2);color:var(--text-muted);font-size:13px;
+  line-height:1.5;cursor:pointer;transition:all .2s;text-align:left;
+  font-family:'Outfit',sans-serif;font-weight:300;
+}
+.quiz-opt:hover{border-color:var(--border-bright);color:var(--cream);background:var(--bg3)}
+.quiz-opt.selected{border-color:var(--gold);background:rgba(201,169,110,0.06);color:var(--cream)}
+.quiz-actions{display:flex;justify-content:space-between;align-items:center}
+.quiz-step-label{font-size:12px;color:var(--text-dim)}
+.quiz-next-btn{
+  padding:11px 24px;background:#c9a96e;color:#08070f;border:none;
+  border-radius:8px;font-size:13px;font-family:'Outfit',sans-serif;
+  font-weight:500;cursor:pointer;transition:all .2s;
+}
+.quiz-next-btn:hover{background:var(--cream)}
+.quiz-next-btn:disabled{background:var(--bg3);color:var(--text-dim);cursor:not-allowed}
+
+/* RESULT ARCHETYPE */
+.archetype-result{
+  max-width:480px;margin:0 auto;text-align:center;
+  padding:40px 28px;
+}
+.archetype-sigil-big{font-size:64px;margin-bottom:20px;line-height:1}
+.archetype-element{font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;font-weight:500}
+.archetype-name{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;margin-bottom:4px}
+.archetype-role{font-size:13px;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px}
+.archetype-quote{
+  font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;
+  margin-bottom:16px;padding:12px 20px;border-radius:10px;
+}
+.archetype-desc{font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:24px;font-weight:300}
+.archetype-traits{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.archetype-trait{font-size:11px;padding:4px 12px;border-radius:10px;border:1px solid;letter-spacing:.03em}
+.share-archetype-btn{
+  padding:12px 28px;border:1px solid var(--border-bright);
+  border-radius:8px;font-size:13px;font-family:'Outfit',sans-serif;
+  cursor:pointer;color:var(--gold);background:var(--gold-soft);
+  transition:all .2s;margin-right:10px;
+}
+.share-archetype-btn:hover{border-color:var(--gold)}
+.retake-btn{
+  padding:12px 28px;background:transparent;border:1px solid var(--border);
+  border-radius:8px;font-size:13px;font-family:'Outfit',sans-serif;
+  cursor:pointer;color:var(--text-muted);transition:all .2s;
+}
+.retake-btn:hover{border-color:var(--border-bright);color:var(--cream)}
+
+/* PROFILE */
+.profile-header{
+  display:flex;align-items:center;gap:20px;margin-bottom:28px;
+  padding:24px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+}
+.profile-avatar-big{
+  width:72px;height:72px;border-radius:50%;
+  background:#1a1642;border:1px solid rgba(201,169,110,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:28px;color:#fff;flex-shrink:0;
+}
+.profile-meta h2{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--cream);margin-bottom:4px}
+.profile-meta p{font-size:13px;color:var(--text-muted)}
+.plan-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:12px;border:1px solid var(--border-bright);font-size:11px;color:var(--gold);background:var(--gold-soft);margin-top:6px;letter-spacing:.04em;font-weight:500}
+.form-group{margin-bottom:16px}
+.form-label{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:6px}
+.form-input{
+  width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border-bright);
+  border-radius:8px;color:var(--cream);font-family:'Outfit',sans-serif;font-size:14px;
+  outline:none;transition:border-color .2s;
+}
+.form-input:focus{border-color:var(--gold)}
+.form-input::placeholder{color:var(--text-dim)}
+select.form-input option{background:var(--bg3)}
+.save-btn{
+  padding:10px 24px;background:#c9a96e;color:#08070f;border:none;
+  border-radius:8px;font-size:13px;font-family:'Outfit',sans-serif;
+  font-weight:500;cursor:pointer;transition:all .2s;margin-top:4px;
+}
+.save-btn:hover{background:var(--cream)}
+.danger-btn{
+  padding:10px 24px;background:rgba(217,92,138,0.1);color:#d95c8a;
+  border:1px solid rgba(217,92,138,0.3);border-radius:8px;font-size:13px;
+  font-family:'Outfit',sans-serif;cursor:pointer;transition:all .2s;
+}
+.danger-btn:hover{background:rgba(217,92,138,0.2)}
+
+/* BILLING */
+.billing-plan-card{
+  padding:20px;background:var(--bg3);border:1px solid var(--border-bright);
+  border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+}
+.billing-plan-info h4{font-size:15px;font-weight:500;color:var(--cream);margin-bottom:4px}
+.billing-plan-info p{font-size:12px;color:var(--text-muted)}
+.upgrade-btn{
+  padding:9px 20px;background:#c9a96e;color:#08070f;border:none;
+  border-radius:7px;font-size:13px;font-family:'Outfit',sans-serif;
+  font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.upgrade-btn:hover{background:var(--cream)}
+.invoice-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.invoice-row:last-child{border-bottom:none}
+.invoice-date{color:var(--text-muted)}
+.invoice-amt{color:var(--cream);font-weight:500}
+.invoice-status{font-size:10px;padding:2px 8px;border-radius:6px;background:rgba(42,181,137,0.12);color:#2ab589}
+.topup-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.topup-card{
+  padding:14px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;text-align:center;cursor:pointer;transition:all .2s;
+}
+.topup-card:hover{border-color:var(--border-bright);background:var(--bg3)}
+.topup-sessions{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--gold);font-weight:300}
+.topup-label{font-size:11px;color:var(--text-muted);margin-bottom:8px}
+.topup-price{font-size:14px;font-weight:500;color:var(--cream)}
+
+/* SETTINGS */
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
+.settings-row:last-child{border-bottom:none}
+.settings-info strong{font-size:13px;color:var(--cream);font-weight:500;display:block;margin-bottom:2px}
+.settings-info p{font-size:12px;color:var(--text-muted)}
+.toggle-track{
+  width:40px;height:22px;border-radius:11px;border:1px solid var(--border-bright);
+  background:var(--bg3);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;
+}
+.toggle-track.on{background:var(--gold);border-color:var(--gold)}
+.toggle-thumb{
+  width:16px;height:16px;border-radius:50%;background:#fff;
+  position:absolute;top:2px;left:2px;transition:transform .2s;
+}
+.toggle-track.on .toggle-thumb{transform:translateX(18px)}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--bg2);border:1px solid var(--border-bright);border-radius:10px;
+  padding:10px 20px;font-size:13px;color:var(--text);
+  opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:60px 24px}
+.empty-state-icon{font-size:40px;margin-bottom:16px;opacity:.4}
+.empty-state h3{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--cream);font-weight:300;margin-bottom:8px}
+.empty-state p{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:24px 0}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<div class="app">
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">
+      <svg width="18" height="18" viewBox="0 0 44 44" fill="none">
+        <rect width="44" height="44" rx="11" fill="#1a1642"/>
+        <circle cx="14" cy="26" r="2.2" fill="#c9a96e" opacity=".4"/>
+        <circle cx="19" cy="20" r="2.2" fill="#c9a96e" opacity=".65"/>
+        <circle cx="25" cy="16" r="2.6" fill="#c9a96e" opacity=".95"/>
+        <circle cx="22" cy="28" r="1.8" fill="#c9a96e" opacity=".28"/>
+        <circle cx="30" cy="24" r="1.8" fill="#c9a96e" opacity=".55"/>
+      </svg>
+    </div>
+    <span class="sidebar-logo-name" style="font-family:'Cormorant Garamond',Georgia,serif;letter-spacing:.06em;font-weight:700;font-size:18px;color:#f0ead8">CLARIO</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="nav-item active" onclick="showPage('overview')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Overview
+    </button>
+    <button class="nav-item" onclick="showPage('new-session')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      New session
+    </button>
+
+    <div class="nav-section-label">Daily cards</div>
+    <button class="nav-item" onclick="showPage('zodiac')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a9.96 9.96 0 0 1 4 8 9.96 9.96 0 0 1-4 8 9.96 9.96 0 0 1-4-8 9.96 9.96 0 0 1 4-8z"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+      My zodiac cards
+    </button>
+    <div class="nav-section-label">My board</div>
+    <button class="nav-item" onclick="showPage('history')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+      Decision history
+    </button>
+    <button class="nav-item" onclick="showPage('advisors')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      My advisors
+    </button>
+    <button class="nav-item" onclick="showPage('quiz')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      My archetype
+    </button>
+
+    <div class="nav-section-label">Account</div>
+    <button class="nav-item" onclick="showPage('profile')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Profile
+    </button>
+    <button class="nav-item" onclick="showPage('billing')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      Billing & credits
+    </button>
+    <button class="nav-item" onclick="showPage('settings')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </button>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="sb-avatar">MJ</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sb-name">Alex</div>
+        <div class="sidebar-user-plan" id="sb-plan" style="color:#c9a96e">CLARITY PLAN</div>
+      </div>
+      <button class="sidebar-signout" onclick="showToast('Signed out')" title="Sign out">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="topbar-title" id="topbar-title">Overview</span>
+      <span id="topbar-welcome" style="font-size:12px;color:var(--text-dim);margin-left:12px;font-weight:300"></span>
+    </div>
+    <div class="topbar-right">
+      <div class="credit-badge" onclick="showPage('billing')">
+        <div class="credit-dot"></div>
+        <span id="topbar-credits">47 sessions left</span>
+      </div>
+      <button class="new-session-btn" onclick="showPage('new-session')">+ New session</button>
+    </div>
+  </div>
+
+  <!-- ════════════════ OVERVIEW ════════════════ -->
+  <div id="page-overview" class="page active" style="padding:28px">
+
+    <div class="grid4">
+      <div class="metric-card">
+        <div class="metric-label">Sessions this month</div>
+        <div class="metric-val">13</div>
+        <div class="metric-sub">of 60 included</div>
+        <div class="metric-change up">↑ 4 vs last month</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Credits remaining</div>
+        <div class="metric-val" style="color:var(--gold)">47</div>
+        <div class="metric-sub">+ 10 rollover banked</div>
+        <div class="metric-change up">Resets in 18 days</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Total decisions</div>
+        <div class="metric-val">31</div>
+        <div class="metric-sub">since you joined</div>
+        <div class="metric-change up">↑ Lifetime</div>
+      </div>
+      <div class="metric-card" style="cursor:pointer" onclick="showPage('zodiac')">
+        <div class="metric-label">Today's zodiac</div>
+        <div class="metric-val" style="font-size:22px;color:#2ab589" id="overview-zodiac-sign">&#9843;</div>
+        <div class="metric-sub" id="overview-zodiac-label">Pisces · 5 cards ready</div>
+        <div class="metric-change" style="background:rgba(42,181,137,0.1);color:#2ab589">View cards →</div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <span class="section-label">Credit balance</span>
+        <div class="card card-gold">
+          <div class="credit-bar-wrap">
+            <div class="credit-bar-top">
+              <span class="credit-bar-label">Monthly sessions</span>
+              <span class="credit-bar-num">47 / 60</span>
+            </div>
+            <div class="credit-bar-track"><div class="credit-bar-fill" style="width:78%;background:linear-gradient(90deg,#8a7048,#c9a96e)"></div></div>
+          </div>
+          <div class="credit-bar-wrap">
+            <div class="credit-bar-top">
+              <span class="credit-bar-label" style="font-size:12px;color:var(--text-muted)">Rollover banked</span>
+              <span class="credit-bar-num" style="font-size:16px">10 / 10</span>
+            </div>
+            <div class="credit-bar-track"><div class="credit-bar-fill" style="width:100%;background:linear-gradient(90deg,#6b5ce7,#9d8ff5)"></div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <span style="font-size:12px;color:var(--text-dim)">Pro Plan · Resets Dec 15</span>
+            <button class="upgrade-btn" style="padding:6px 14px;font-size:12px" onclick="showPage('billing')">Top up →</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="section-label">Recent decisions</span>
+        <div class="card" style="padding:14px">
+          <div class="history-list" id="overview-history"></div>
+          <button style="width:100%;padding:8px;background:transparent;border:1px solid var(--border);border-radius:7px;color:var(--text-muted);font-size:12px;cursor:pointer;margin-top:12px;font-family:'Outfit',sans-serif;transition:all .2s" onclick="showPage('history')" onmouseover="this.style.borderColor='var(--border-bright)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">View all decisions →</button>
+        </div>
+      </div>
+    </div>
+
+    <span class="section-label">Advisor affinity — which voices resonate with you most</span>
+    <div class="affinity-grid" id="affinity-grid"></div>
+
+  </div>
+
+  <!-- ════════════════ NEW SESSION ════════════════ -->
+  <div id="page-new-session" class="page" style="padding:28px;max-width:680px">
+    <div class="card card-gold" style="margin-bottom:20px">
+      <h3 style="margin-bottom:6px">Your primary advisor: Kai</h3>
+      <p>Based on your archetype quiz, Kai will receive a subtle emphasis in your debate. All five advisors still participate fully.</p>
+    </div>
+    <span class="section-label">What decision are you wrestling with?</span>
+    <textarea id="ns-input" style="width:100%;min-height:140px;padding:16px;background:var(--bg2);border:1px solid var(--border-bright);border-radius:12px;color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;line-height:1.65;resize:vertical;outline:none;margin-bottom:12px;transition:border-color .2s" placeholder="Describe your decision in detail. The more specific you are, the sharper the debate will be..." onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border-bright)'"></textarea>
+    <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px">
+      <button onclick="fillNS(this)" style="padding:5px 12px;border-radius:16px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s" onmouseover="this.style.borderColor='var(--border-bright)';this.style.color='var(--cream)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Should I quit my job to start a business?</button>
+      <button onclick="fillNS(this)" style="padding:5px 12px;border-radius:16px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s" onmouseover="this.style.borderColor='var(--border-bright)';this.style.color='var(--cream)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Should I relocate my family abroad?</button>
+      <button onclick="fillNS(this)" style="padding:5px 12px;border-radius:16px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s" onmouseover="this.style.borderColor='var(--border-bright)';this.style.color='var(--cream)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Should I end this business partnership?</button>
+      <button onclick="fillNS(this)" style="padding:5px 12px;border-radius:16px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s" onmouseover="this.style.borderColor='var(--border-bright)';this.style.color='var(--cream)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Should I invest my savings in this opportunity?</button>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <p style="font-size:11px;color:var(--text-dim);line-height:1.5;max-width:320px">This session costs 1 credit. Advisors offer perspectives only — not financial, legal, or medical advice.</p>
+      <button class="new-session-btn" style="font-size:15px;padding:13px 32px" onclick="showToast('Opening board session...')">Convene the board →</button>
+    </div>
+  </div>
+
+  <!-- ════════════════ HISTORY ════════════════ -->
+  <div id="page-history" class="page" style="padding:28px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+      <div>
+        <span class="section-label" style="margin-bottom:4px">31 total decisions</span>
+        <p style="font-size:13px;color:var(--text-muted)">Every session saved — tap to expand the full debate</p>
+      </div>
+      <div style="display:flex;gap:8px">
+        <select style="padding:7px 12px;background:var(--bg2);border:1px solid var(--border-bright);border-radius:7px;color:var(--text-muted);font-family:'Outfit',sans-serif;font-size:12px;outline:none">
+          <option>All categories</option>
+          <option>Career</option>
+          <option>Relationships</option>
+          <option>Business</option>
+          <option>Life</option>
+        </select>
+        <input type="search" placeholder="Search decisions..." style="padding:7px 12px;background:var(--bg2);border:1px solid var(--border-bright);border-radius:7px;color:var(--cream);font-family:'Outfit',sans-serif;font-size:12px;outline:none;width:180px" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border-bright)'">
+      </div>
+    </div>
+    <div class="card" style="padding:16px 20px">
+      <div class="history-list" id="full-history"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════ ADVISORS PAGE ════════════════ -->
+  <div id="page-advisors" class="page" style="padding:28px">
+    <span class="section-label">Your board — all five archetypes</span>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px" id="advisors-detail-grid"></div>
+  </div>
+
+  <!-- ════════════════ QUIZ / ARCHETYPE ════════════════ -->
+  <div id="page-quiz" class="page" style="padding:28px">
+    <div id="quiz-content"></div>
+  </div>
+
+  <!-- ════════════════ PROFILE ════════════════ -->
+  <div id="page-profile" class="page" style="padding:28px;max-width:700px">
+    <div class="profile-header">
+      <div class="profile-avatar-big" id="profile-avatar-big">MJ</div>
+      <div class="profile-meta">
+        <h2 id="profile-name-display">Alex Morgan</h2>
+        <p id="profile-email-display">alex@example.com</p>
+        <div class="plan-chip" style="border-color:rgba(201,169,110,0.3);color:#c9a96e;background:rgba(201,169,110,0.08)">✦ Pro · 47 sessions remaining</div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-bottom:16px">Personal information</h3>
+        <div class="form-group"><label class="form-label">Full name</label><input class="form-input" id="pf-name" value="Alex Morgan"/></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="pf-email" type="email" value="alex@example.com"/></div>
+        <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="pf-location" value="London, UK"/></div>
+        <div class="form-group"><label class="form-label">Preferred language</label>
+          <select class="form-input"><option>English</option><option>Arabic</option><option>French</option></select>
+        </div>
+        <button class="save-btn" onclick="saveProfile()">Save changes</button>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:14px">
+          <h3 style="margin-bottom:16px">Your archetype</h3>
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:52px;height:52px;border-radius:50%;background:rgba(139,124,248,0.15);border:1px solid rgba(139,124,248,0.3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">✦</div>
+            <div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--kai)">Kai — The Visionary</div>
+              <div style="font-size:12px;color:var(--text-muted)">Air · Freedom through vision</div>
+              <div style="font-size:11px;color:var(--text-dim);margin-top:4px">Quiz completed Nov 28, 2025</div>
+            </div>
+          </div>
+          <button onclick="showPage('quiz')" style="width:100%;margin-top:14px;padding:8px;background:transparent;border:1px solid var(--border-bright);border-radius:7px;color:var(--text-muted);font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'">Retake archetype quiz →</button>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:16px">Security</h3>
+          <div class="form-group"><label class="form-label">Current password</label><input class="form-input" type="password" placeholder="••••••••"/></div>
+          <div class="form-group"><label class="form-label">New password</label><input class="form-input" type="password" placeholder="••••••••"/></div>
+          <button class="save-btn" onclick="showToast('Password updated')">Update password</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="border-color:rgba(217,92,138,0.2)">
+      <h3 style="margin-bottom:8px;color:#d95c8a">Danger zone</h3>
+      <p style="margin-bottom:14px">Deleting your account permanently removes all your decision history, archetype results, and profile data.</p>
+      <button class="danger-btn" onclick="showToast('Please contact support to delete your account')">Delete account</button>
+    </div>
+  </div>
+
+  <!-- ════════════════ BILLING ════════════════ -->
+  <div id="page-billing" class="page" style="padding:28px;max-width:700px">
+
+    <span class="section-label">Current plan</span>
+    <div class="billing-plan-card">
+      <div class="billing-plan-info">
+        <h4>Clarity Plan · $14.99 / month</h4>
+        <p>30 sessions/month · All 6 zodiac cards · Next billing Apr 15, 2026</p>
+        <p style="margin-top:4px;font-size:11px;color:var(--text-dim)">Paying monthly — switch to annual and save $30/year</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="upgrade-btn" onclick="showToast('Opening annual upgrade...')">Switch to annual →</button>
+        <button style="padding:9px 16px;background:transparent;border:1px solid var(--border);border-radius:7px;font-size:13px;font-family:'Outfit',sans-serif;cursor:pointer;color:var(--text-muted);transition:all .2s" onmouseover="this.style.borderColor='var(--border-bright)'" onmouseout="this.style.borderColor='var(--border)'" onclick="showToast('Opening upgrade options...')">Upgrade plan</button>
+      </div>
+    </div>
+
+    <span class="section-label">Credit balance</span>
+    <div class="card card-gold" style="margin-bottom:20px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px">
+        <div style="text-align:center">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--gold);font-weight:300">47</div>
+          <div style="font-size:11px;color:var(--text-muted)">Monthly remaining</div>
+        </div>
+        <div style="text-align:center;border-left:1px solid var(--border);border-right:1px solid var(--border)">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--purple-soft);font-weight:300">10</div>
+          <div style="font-size:11px;color:var(--text-muted)">Rollover banked</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--nadia);font-weight:300">57</div>
+          <div style="font-size:11px;color:var(--text-muted)">Total available</div>
+        </div>
+      </div>
+      <div class="credit-bar-track" style="margin-bottom:8px"><div class="credit-bar-fill" style="width:78%;background:linear-gradient(90deg,#8a7048,#c9a96e)"></div></div>
+      <p style="font-size:11px;color:var(--text-dim)">13 of 60 sessions used this month · Resets December 15</p>
+    </div>
+
+    <span class="section-label">Buy extra sessions</span>
+    <div class="topup-grid">
+      <div class="topup-card" onclick="showToast('5 sessions added — $4.99 charged')">
+        <div class="topup-sessions">5</div>
+        <div class="topup-label">sessions</div>
+        <div class="topup-price">$4.99</div>
+      </div>
+      <div class="topup-card" onclick="showToast('15 sessions added — $9.99 charged')">
+        <div class="topup-sessions" style="color:var(--gold)">15</div>
+        <div class="topup-label">sessions</div>
+        <div class="topup-price">$9.99</div>
+      </div>
+      <div class="topup-card" onclick="showToast('40 sessions added — $19.99 charged')">
+        <div class="topup-sessions" style="color:var(--nadia)">40</div>
+        <div class="topup-label">sessions</div>
+        <div class="topup-price">$19.99</div>
+      </div>
+    </div>
+
+    <span class="section-label">Billing history</span>
+    <div class="card" style="padding:14px 20px">
+      <div class="invoice-row"><span class="invoice-date">Nov 15, 2025</span><span>Pro Plan — Monthly</span><span class="invoice-amt">$14.99</span><span class="invoice-status">Paid</span></div>
+      <div class="invoice-row"><span class="invoice-date">Oct 15, 2025</span><span>Pro Plan — Monthly</span><span class="invoice-amt">$14.99</span><span class="invoice-status">Paid</span></div>
+      <div class="invoice-row"><span class="invoice-date">Oct 10, 2025</span><span>Top-up · 15 sessions</span><span class="invoice-amt">$9.99</span><span class="invoice-status">Paid</span></div>
+      <div class="invoice-row"><span class="invoice-date">Sep 15, 2025</span><span>Pro Plan — Monthly</span><span class="invoice-amt">$14.99</span><span class="invoice-status">Paid</span></div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SETTINGS ════════════════ -->
+  <div id="page-settings" class="page" style="padding:28px;max-width:600px">
+    <span class="section-label">Notifications</span>
+    <div class="card" style="padding:14px 20px;margin-bottom:20px">
+      <div class="settings-row">
+        <div class="settings-info"><strong>Session reminders</strong><p>Weekly nudge to bring your decisions to the board</p></div>
+        <div class="toggle-track on" onclick="toggleSetting(this)"><div class="toggle-thumb"></div></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-info"><strong>Credit alerts</strong><p>Alert when you have 5 sessions remaining</p></div>
+        <div class="toggle-track on" onclick="toggleSetting(this)"><div class="toggle-thumb"></div></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-info"><strong>New advisor features</strong><p>Notify me when advisors get new capabilities</p></div>
+        <div class="toggle-track" onclick="toggleSetting(this)"><div class="toggle-thumb"></div></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-info"><strong>Product news</strong><p>Clario updates and new feature announcements</p></div>
+        <div class="toggle-track" onclick="toggleSetting(this)"><div class="toggle-thumb"></div></div>
+      </div>
+    </div>
+
+    <span class="section-label">Privacy</span>
+    <div class="card" style="padding:14px 20px;margin-bottom:20px">
+      <div class="settings-row">
+        <div class="settings-info"><strong>Save session history</strong><p>Store your decision debates for future reference</p></div>
+        <div class="toggle-track on" onclick="toggleSetting(this)"><div class="toggle-thumb"></div></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-info"><strong>Anonymous analytics</strong><p>Help improve Clario with anonymised usage data</p></div>
+        <div class="toggle-track on" onclick="toggleSetting(this)"><div class="toggle-thumb"></div></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-info"><strong>Improve AI responses</strong><p>Allow Anthropic to use anonymised sessions for model improvement</p></div>
+        <div class="toggle-track" onclick="toggleSetting(this)"><div class="toggle-thumb"></div></div>
+      </div>
+    </div>
+
+    <span class="section-label">Appearance</span>
+    <div class="card" style="padding:14px 20px;margin-bottom:20px">
+      <div class="settings-row">
+        <div class="settings-info"><strong>Dark mode</strong><p>Clario is designed for dark mode — always on</p></div>
+        <div class="toggle-track on" style="opacity:.5;cursor:not-allowed"><div class="toggle-thumb"></div></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-info"><strong>Typing animation</strong><p>Show advisor responses typing character by character</p></div>
+        <div class="toggle-track on" onclick="toggleSetting(this)"><div class="toggle-thumb"></div></div>
+      </div>
+    </div>
+
+    <span class="section-label">Connected accounts</span>
+    <div class="card" style="padding:14px 20px">
+      <div class="settings-row">
+        <div class="settings-info"><strong>Google</strong><p>Connected — alex@gmail.com</p></div>
+        <button style="padding:6px 14px;background:transparent;border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text-muted);cursor:pointer;font-family:'Outfit',sans-serif" onclick="showToast('Google account disconnected')">Disconnect</button>
+      </div>
+      <div class="settings-row">
+        <div class="settings-info"><strong>Apple</strong><p>Not connected</p></div>
+        <button style="padding:6px 14px;background:transparent;border:1px solid var(--border-bright);border-radius:6px;font-size:12px;color:var(--gold);cursor:pointer;font-family:'Outfit',sans-serif" onclick="showToast('Connecting Apple account...')">Connect</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════ ZODIAC CARDS ════════════════ -->
+  <div id="page-zodiac" class="page" style="padding:28px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:4px">Today · Sunday, March 15 2026</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--cream);font-weight:400">Your daily cards</div>
+      </div>
+      <div id="zodiac-sign-badge" style="display:flex;align-items:center;gap:8px;padding:8px 16px;background:var(--bg2);border:1px solid var(--border-bright);border-radius:20px"><span style="font-size:20px;color:#2ab589">&#9843;</span><div><div style="font-size:12px;font-weight:500;color:#2ab589">Pisces</div><div style="font-size:10px;color:var(--text-dim)">Feb 19 – Mar 20 · Neptune</div></div></div>
+    </div>
+
+    <!-- 5 DAILY CARDS -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:20px">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #d4921a;border-radius:12px;padding:16px">
+        <div style="font-size:18px;color:#d4921a;margin-bottom:6px">&#9670;</div>
+        <div style="font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#d4921a;margin-bottom:4px">Fortune</div>
+        <div style="font-size:13px;font-weight:500;color:var(--cream);margin-bottom:8px">Wealth &amp; opportunity</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.55;font-style:italic;margin-bottom:10px">A financial decision you have been postponing becomes clearer today. The clarity you have been waiting for arrives before Thursday.</div>
+        <div style="display:flex;align-items:center;gap:3px">
+          <div style="width:6px;height:6px;border-radius:50%;background:#d4921a;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#d4921a;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#d4921a;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#d4921a;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#d4921a;opacity:.2"></div>
+          <span style="font-size:10px;color:#d4921a;margin-left:4px">Strong</span>
+        </div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #2ab589;border-radius:12px;padding:16px">
+        <div style="font-size:18px;color:#2ab589;margin-bottom:6px">&#10052;</div>
+        <div style="font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#2ab589;margin-bottom:4px">Love</div>
+        <div style="font-size:13px;font-weight:500;color:var(--cream);margin-bottom:8px">Connection &amp; heart</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.55;font-style:italic;margin-bottom:10px">Someone close needs to hear something you have been holding back. Today carries the right emotional weight for that conversation.</div>
+        <div style="display:flex;align-items:center;gap:3px">
+          <div style="width:6px;height:6px;border-radius:50%;background:#2ab589;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#2ab589;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#2ab589;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#2ab589;opacity:.2"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#2ab589;opacity:.2"></div>
+          <span style="font-size:10px;color:#2ab589;margin-left:4px">Moderate</span>
+        </div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #8b7cf8;border-radius:12px;padding:16px">
+        <div style="font-size:18px;color:#8b7cf8;margin-bottom:6px">&#9775;</div>
+        <div style="font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#8b7cf8;margin-bottom:4px">Future</div>
+        <div style="font-size:13px;font-weight:500;color:var(--cream);margin-bottom:8px">Path &amp; direction</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.55;font-style:italic;margin-bottom:10px">The path you chose last month is aligning. What felt uncertain two weeks ago is becoming the right direction — trust it.</div>
+        <div style="display:flex;align-items:center;gap:3px">
+          <div style="width:6px;height:6px;border-radius:50%;background:#8b7cf8;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#8b7cf8;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#8b7cf8;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#8b7cf8;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#8b7cf8;opacity:.9"></div>
+          <span style="font-size:10px;color:#8b7cf8;margin-left:4px">Excellent</span>
+        </div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #c9a96e;border-radius:12px;padding:16px">
+        <div style="font-size:18px;color:#c9a96e;margin-bottom:6px">&#9728;</div>
+        <div style="font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#c9a96e;margin-bottom:4px">Luck</div>
+        <div style="font-size:13px;font-weight:500;color:var(--cream);margin-bottom:8px">Energy &amp; timing</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.55;font-style:italic;margin-bottom:10px">Mercury is in your favour. Negotiations, contracts, and important conversations carry special weight today. Lucky hour: 2pm–4pm.</div>
+        <div style="display:flex;align-items:center;gap:3px">
+          <div style="width:6px;height:6px;border-radius:50%;background:#c9a96e;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#c9a96e;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#c9a96e;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#c9a96e;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#c9a96e;opacity:.2"></div>
+          <span style="font-size:10px;color:#c9a96e;margin-left:4px">High</span>
+        </div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #e8623a;border-radius:12px;padding:16px">
+        <div style="font-size:18px;color:#e8623a;margin-bottom:6px">&#10084;</div>
+        <div style="font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#e8623a;margin-bottom:4px">Health</div>
+        <div style="font-size:13px;font-weight:500;color:var(--cream);margin-bottom:8px">Vitality &amp; energy</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.55;font-style:italic;margin-bottom:10px">Physical energy peaks this afternoon. Prioritise movement before 3pm for lasting mental clarity through the evening.</div>
+        <div style="display:flex;align-items:center;gap:3px">
+          <div style="width:6px;height:6px;border-radius:50%;background:#e8623a;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#e8623a;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#e8623a;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#e8623a;opacity:.9"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#e8623a;opacity:.2"></div>
+          <span style="font-size:10px;color:#e8623a;margin-left:4px">Good</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY MASTER CARD -->
+    <div style="background:var(--bg2);border:1px solid rgba(201,169,110,.35);border-radius:14px;padding:22px;margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid rgba(201,169,110,.15)">
+        <div style="width:40px;height:40px;border-radius:50%;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--gold)">&#9733;</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;color:var(--gold);font-family:'Cormorant Garamond',serif;letter-spacing:.04em">Day Master Card</div>
+          <div style="font-size:11px;color:var(--text-dim)" class="master-sign-sub-dynamic">Your comprehensive daily reading · Pisces &#9843; · Sunday March 15</div>
+        </div>
+        <button onclick="showToast('Share card copied')" style="margin-left:auto;padding:6px 14px;background:transparent;border:1px solid rgba(201,169,110,.3);border-radius:7px;font-size:11px;color:var(--gold);cursor:pointer;font-family:var(--font-sans);transition:all .2s" onmouseover="this.style.background='rgba(201,169,110,.1)'" onmouseout="this.style.background='transparent'">Share ↗</button>
+      </div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.75;margin-bottom:14px;font-weight:300;font-style:italic">Today carries an unusual confluence of Fortune and Future energy — both cards point toward the same window of opportunity. Neptune sharpens your intuition precisely when Mercury favours decisive action. The financial hesitation you have been carrying is not fear — it is timing, and that timing resolves today. On the relational front, the stillness you feel is not distance; it is the quiet before a meaningful conversation that has been building for weeks. Your health energy peaks between 2pm and 5pm — use that window for the conversation or the decision, not for routine tasks.</p>
+      <div style="padding:12px 14px;background:var(--bg3);border-radius:8px;border-left:2px solid var(--gold);margin-bottom:14px">
+        <div style="font-size:10px;font-weight:500;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">Today's action</div>
+        <div style="font-size:13px;color:var(--cream);line-height:1.5">Send the message or make the call you have been drafting in your head. The window is open now.</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <span style="font-size:11px;color:#d4921a;font-weight:500">Fortune: Strong &#9670;</span>
+        <span style="font-size:11px;color:#2ab589;font-weight:500">Love: Moderate &#10052;</span>
+        <span style="font-size:11px;color:#8b7cf8;font-weight:500">Future: Excellent &#9775;</span>
+        <span style="font-size:11px;color:#c9a96e;font-weight:500">Luck: High &#9728;</span>
+        <span style="font-size:11px;color:#e8623a;font-weight:500">Health: Good &#10084;</span>
+      </div>
+    </div>
+
+    <!-- BOARD READS YOUR CARDS -->
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--cream);margin-bottom:4px">Board reads your cards</div>
+        <div style="font-size:12px;color:var(--text-muted);max-width:420px">Let all 5 advisors debate what today's Day Master Card means for your biggest open decision. Uses 1 session credit.</div>
+      </div>
+      <button onclick="showPage('new-session');showToast('Opening board session with your cards...');" style="padding:10px 22px;background:var(--gold);color:var(--bg);border:none;border-radius:8px;font-size:13px;font-family:var(--font-sans);font-weight:500;cursor:pointer;white-space:nowrap;transition:background .2s" onmouseover="this.style.background='#b8924a'" onmouseout="this.style.background='var(--gold)'">Let the board read my cards →</button>
+    </div>
+  </div>
+
+</div><!-- end .main -->
+</div><!-- end .app -->
+
+<script>
+/* -- DATA -- */
+const ADVISORS_DATA = [
+  {id:'rex',name:'Rex',role:'The Strategist',element:'Fire',archetype:'The Emperor',symbol:'♛',quote:'Dominion through strategy',color:'#e8623a',sigil:'♛',
+   desc:'Rex thinks in systems and 10-year horizons. He establishes the strategic frame before anyone else can muddy it.',
+   traits:['Strategic','Direct','Long-term','Systems thinker'],
+   asks:'What does winning look like in 5 years?',affinity:18},
+  {id:'nadia',name:'Nadia',role:'The Empath',element:'Water',archetype:'The Oracle',symbol:'☽',quote:'Truth through feeling',color:'#2ab589',sigil:'☽',
+   desc:'Nadia surfaces what you didn\'t say -- the fear, the real cost, the person you haven\'t mentioned.',
+   traits:['Perceptive','Warm','Honest','Quiet power'],
+   asks:'What is the person actually afraid of?',affinity:24},
+  {id:'kai',name:'Kai',role:'The Visionary',element:'Air',archetype:'The Wanderer',symbol:'✦',quote:'Freedom through vision',color:'#8b7cf8',sigil:'✦',
+   desc:'Kai sees the option nobody put on the table. When the board debates A vs B, Kai asks about C.',
+   traits:['Expansive','Bold','Curious','Unconventional'],
+   asks:'Are you choosing A vs B when there is a C?',affinity:38},
+  {id:'mira',name:'Mira',role:'The Realist',element:'Earth',archetype:'The Architect',symbol:'◈',quote:'Clarity through numbers',color:'#d4921a',sigil:'◈',
+   desc:'Mira quantifies everything. She needs three numbers before forming an opinion -- and she\'s usually right.',
+   traits:['Precise','Calm','Factual','Scenario-builder'],
+   asks:'What are the actual numbers -- costs, probabilities, timelines?',affinity:12},
+  {id:'dante',name:'Dante',role:"Devil's Advocate",element:'Void',archetype:'The Shadow',symbol:'⊗',quote:'Growth through fire',color:'#d95c8a',sigil:'⊗',
+   desc:'Dante attacks the consensus forming in the room. His job is to ask the question everyone agreed not to ask.',
+   traits:['Fearless','Sharp','Contrarian','Essential'],
+   asks:'What is everyone agreeing on that might be wrong?',affinity:8}
+];
+
+const HISTORY_DATA = [
+  {id:1,date:'Mar 10, 2026',category:'Career',
+   decision:'I have been offered a senior director role in London paying double my current salary in Amsterdam. I would need to relocate and leave behind six years of built life. My partner and I are not married yet. Should I take it?',
+   synthesis:'The board found strong consensus on one thing: this decision needs a structured conversation with your partner before any negotiation with the employer. The salary gap is real and meaningful. The relocation concern is legitimate but manageable. Dante\'s question about whether this is a relationship decision dressed as a career one is worth sitting with.',
+   verdicts:{rex:'Take it strategically',nadia:'Have the partner conversation first',kai:'Does it open doors Amsterdam cannot?',mira:'Model the commute numbers',dante:'Which problem are you really solving?'},
+   msgs:[
+     {adv:'rex',text:'Double salary is a category change, not an increment. The London tech market opens doors Amsterdam simply cannot. The real question is not whether to go -- it is whether you have a 12-month plan to either bring your partner or return having built real leverage.'},
+     {adv:'nadia',text:'Rex, you skipped the most important variable. An unmarried partner and six years together. Before this becomes a financial calculation it needs to be an honest conversation. Have you actually asked your partner what they want -- not what they would accept?'},
+     {adv:'kai',text:'You are choosing between Amsterdam and London. I want to know: does this role open a door that does not exist in Amsterdam? If yes, that changes everything. Temporary separation for permanent elevation is a different deal entirely.'},
+     {adv:'mira',text:'Amsterdam to London is a 40-minute flight under £100. At double salary you can visit every two weeks and still save significantly more than now. Run the actual numbers before framing this as abandoning your relationship.'},
+     {adv:'dante',text:'Nobody has asked the question that changes everything: why are you framing this as a solo decision? If your partner cannot or will not come, that tells you something important about the relationship -- not just the job.'}
+   ]},
+  {id:2,date:'Feb 28, 2026',category:'Business',
+   decision:'Should I spin off my consulting practice as a separate brand from my main agency? I have been running both under one name for three years and clients are getting confused about what we actually do.',
+   synthesis:'The board split on timing but agreed on the core diagnosis: two brands serving two different buyer personas need to be separated eventually. The question is whether now is the right moment. Mira wants six months of revenue data first. Dante questioned whether the confusion is really about branding or about identity.',
+   verdicts:{rex:'Separate now for clarity',nadia:'Communicate the change carefully',kai:'They are different futures -- treat them that way',mira:'Wait for six months of clean data',dante:'What are you actually afraid of here?'},
+   msgs:[
+     {adv:'rex',text:'Two brands, two different buyer personas. Separate them now before the market puts you in the wrong box permanently. Brand confusion always costs more than a rebrand.'},
+     {adv:'nadia',text:'What do your existing clients think they are buying? The rebrand conversation with them matters more than the logo or the domain name.'},
+     {adv:'kai',text:'These are not just different services -- they are different futures. One is a consultancy, one could be a product company. Treat them accordingly from day one.'},
+     {adv:'mira',text:'Before splitting, I need: monthly revenue per service, client overlap percentage, and the fully-loaded cost of maintaining two brands for twelve months. Without those numbers, this is just preference.'},
+     {adv:'dante',text:'I notice everyone is treating this as a branding decision. Is it possible the real question is about identity -- which business do you actually want to run long term?'}
+   ]},
+  {id:3,date:'Feb 14, 2026',category:'Life',
+   decision:'My wife and I are considering relocating from New York to Lisbon permanently. Lower cost of living, better quality of life, closer to her family in Spain. I work fully remote. The kids are 6 and 9. Should we do it?',
+   synthesis:'Strong board lean toward Lisbon with a structured 12-month transition plan. The key tension: school transitions for the children and your professional network. The reframe from Kai -- that you are not leaving but choosing -- shifted the entire conversation.',
+   verdicts:{rex:'Structure the transition, then go',nadia:'Let the kids have a voice in this',kai:'You are not leaving -- you are choosing',mira:'Model years 1 and 3 financially',dante:'Why are you waiting?'},
+   msgs:[
+     {adv:'rex',text:'Remote work plus European base is a legitimate arbitrage. Lower costs, higher quality of life, same income. The professional network concern is real but solvable with intentional trips back twice a year.'},
+     {adv:'nadia',text:'Your children are 6 and 9. Old enough to have feelings about this, young enough to adapt beautifully. Have you actually talked to them about what an adventure this could be -- not just told them it is happening?'},
+     {adv:'kai',text:'You are not leaving New York. You are choosing Lisbon. That reframe matters. The life you are describing -- closer to family, better pace, outdoor culture for the kids -- that is not running away from something. It is running toward something.'},
+     {adv:'mira',text:'I need the three-year financial model. Year one has transition costs that make it look expensive. Year two and three, the savings compound significantly. Do not make a permanent decision based on year-one numbers.'},
+     {adv:'dante',text:'You have been talking about this for how long? I want to know what the actual blocker is. Because everything you have described points toward going -- and yet here you are, still asking the question.'}
+   ]}
+];
+
+const QUIZ_QUESTIONS = [
+  {advisor:'Rex',color:'#e8623a',symbol:'♛',element:'Fire',
+   q:'When you face a major decision, what do you reach for first?',
+   opts:[
+     {text:'A clear framework -- I map out the pros, cons, and long-term position',score:'rex'},
+     {text:'My gut -- I trust how I feel about it before anything else',score:'nadia'},
+     {text:'I look for the angle nobody else has considered yet',score:'kai'},
+     {text:'Data -- I want the numbers before I form any opinion',score:'mira'},
+     {text:'I stress-test it -- I try to poke holes in every option',score:'dante'}
+   ]},
+  {advisor:'Nadia',color:'#2ab589',symbol:'☽',element:'Water',
+   q:'A friend makes a decision you think is wrong. What do you do?',
+   opts:[
+     {text:'Tell them directly -- kindness without honesty is not kindness',score:'rex'},
+     {text:'Ask questions until they hear themselves -- they usually know the answer',score:'nadia'},
+     {text:'Show them what is possible if they think bigger',score:'kai'},
+     {text:'Walk them through what the numbers actually say',score:'mira'},
+     {text:'Point out the thing they are not letting themselves say out loud',score:'dante'}
+   ]},
+  {advisor:'Kai',color:'#8b7cf8',symbol:'✦',element:'Air',
+   q:'You are choosing between a safe path and a risky one. How do you think about it?',
+   opts:[
+     {text:'Which one wins in 5 years? That is the only question that matters',score:'rex'},
+     {text:'Which one will I regret less? Regret matters more than winning',score:'nadia'},
+     {text:'Is there a third option that makes both of these look small?',score:'kai'},
+     {text:'What is the actual probability of each outcome? Let us calculate',score:'mira'},
+     {text:'Why am I accepting that these are my only two options?',score:'dante'}
+   ]},
+  {advisor:'Mira',color:'#d4921a',symbol:'◈',element:'Earth',
+   q:'You are stuck on a decision. What usually gets you unstuck?',
+   opts:[
+     {text:'Thinking about what position I want to be in -- then reverse-engineering',score:'rex'},
+     {text:'Talking to someone I trust and just saying it all out loud',score:'nadia'},
+     {text:'Imagining the version of this decision that excites me most',score:'kai'},
+     {text:'More information -- I am usually stuck because I am missing a key fact',score:'mira'},
+     {text:'Realising I already know the answer and I am afraid to admit it',score:'dante'}
+   ]},
+  {advisor:'Dante',color:'#d95c8a',symbol:'⊗',element:'Void',
+   q:'How do you feel when someone challenges a decision you have already made?',
+   opts:[
+     {text:'I welcome it if the challenge is logical -- weak arguments do not bother me',score:'rex'},
+     {text:'It depends on how they say it -- delivery matters as much as content',score:'nadia'},
+     {text:'I get curious -- maybe I missed something that opens a better path',score:'kai'},
+     {text:'I check the evidence. If they are right, I update. If not, I move on',score:'mira'},
+     {text:'Good. If no one is challenging it, I probably have not thought hard enough',score:'dante'}
+   ]}
+];
+
+let quizStep=0, quizAnswers=[], currentPage='overview';
+
+/* -- NAVIGATION -- */
+const PAGE_TITLES={'zodiac':'My zodiac cards',
+  'overview':'Overview','new-session':'New session','history':'Decision history',
+  'advisors':'Your board','quiz':'My archetype','profile':'Profile',
+  'billing':'Billing & credits','settings':'Settings'
+};
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const page=document.getElementById('page-'+id);
+  if(page) page.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+id+"'"))
+      n.classList.add('active');
+  });
+  document.getElementById('topbar-title').textContent=PAGE_TITLES[id]||id;
+  if(id==='overview') document.getElementById('topbar-title').textContent='Clario -- Overview';
+  currentPage=id;
+  if(id==='quiz') renderQuiz();
+  if(id==='overview') renderGreeting();
+  if(id==='zodiac') renderZodiacPage();
+  if(id==='advisors') renderAdvisorsPage();
+  window.scrollTo(0,0);
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+/* -- HISTORY -- */
+function renderHistory(containerId, limit){
+  const container=document.getElementById(containerId);
+  if(!container) return;
+  const data=limit?HISTORY_DATA.slice(0,limit):HISTORY_DATA;
+  container.innerHTML=data.map(item=>`
+    <div class="history-item" onclick="toggleHistory(${item.id})">
+      <div class="history-num" style="background:rgba(201,169,110,0.08);color:var(--gold);border:1px solid var(--border-bright)">${item.id}</div>
+      <div class="history-body">
+        <div class="history-decision">${item.decision}</div>
+        <div class="history-meta">
+          <span class="history-date">${item.date}</span>
+          <span style="font-size:10px;padding:1px 7px;border-radius:5px;background:var(--bg3);color:var(--text-muted)">${item.category}</span>
+          <div class="history-verdict-pills">
+            ${Object.entries(item.verdicts).map(([k,v])=>`
+              <span class="vpill" style="background:${getColor(k)}15;color:${getColor(k)};border:1px solid ${getColor(k)}30">${k}: ${v}</span>
+            `).join('')}
+          </div>
+        </div>
+        <div class="history-detail" id="hd-${item.id}">
+          <p class="hd-synthesis">${item.synthesis}</p>
+          <div class="hd-advisor-row">
+            ${item.msgs.map(m=>`
+              <div class="hd-msg">
+                <div class="hd-av" style="background:${getColor(m.adv)}20;color:${getColor(m.adv)}">${getName(m.adv)}</div>
+                <div class="hd-msg-body">
+                  <div class="hd-msg-name" style="color:${getColor(m.adv)}">${getName(m.adv)} · ${getRole(m.adv)}</div>
+                  <div class="hd-msg-text">${m.text}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="history-expand">expand ›</div>
+    </div>
+  `).join('');
+}
+
+function toggleHistory(id){
+  const el=document.getElementById('hd-'+id);
+  if(el) el.classList.toggle('open');
+}
+
+/* -- AFFINITY -- */
+function renderAffinity(){
+  const g=document.getElementById('affinity-grid');
+  if(!g) return;
+  const total=ADVISORS_DATA.reduce((s,a)=>s+a.affinity,0);
+  g.innerHTML=ADVISORS_DATA.map(a=>`
+    <div class="affinity-card">
+      <div class="affinity-sigil" style="color:${a.color}">${a.symbol}</div>
+      <div class="affinity-name" style="color:${a.color}">${a.name}</div>
+      <div class="affinity-bar-track">
+        <div class="affinity-bar-fill" style="width:${Math.round(a.affinity/total*100)}%;background:${a.color}"></div>
+      </div>
+      <div class="affinity-pct">${Math.round(a.affinity/total*100)}% resonance</div>
+    </div>
+  `).join('');
+}
+
+/* -- ADVISORS PAGE -- */
+function renderAdvisorsPage(){
+  const g=document.getElementById('advisors-detail-grid');
+  if(!g) return;
+  g.innerHTML=ADVISORS_DATA.map(a=>`
+    <div class="card" style="border-color:${a.color}22;transition:border-color .2s" onmouseover="this.style.borderColor='${a.color}55'" onmouseout="this.style.borderColor='${a.color}22'">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+        <div style="width:52px;height:52px;border-radius:50%;background:${a.color}18;border:1px solid ${a.color}30;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;color:${a.color}">${a.symbol}</div>
+        <div>
+          <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:${a.color};margin-bottom:2px;font-weight:500">${a.element} · ${a.archetype}</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--cream)">${a.name}</div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase">${a.role}</div>
+        </div>
+      </div>
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:${a.color};margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)">"${a.quote}"</p>
+      <p style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:12px;font-weight:300">${a.desc}</p>
+      <div style="font-size:11px;color:var(--text-dim);margin-bottom:10px;font-style:italic">Key question: "${a.asks}"</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        ${a.traits.map(t=>`<span style="font-size:10px;padding:2px 9px;border-radius:8px;background:${a.color}10;color:${a.color};border:1px solid ${a.color}25">${t}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+/* -- QUIZ -- */
+function renderQuiz(){
+  const container=document.getElementById('quiz-content');
+  const pct=Math.round((quizStep/5)*100);
+  if(quizStep>=5){
+    showQuizResult(container); return;
+  }
+  const q=QUIZ_QUESTIONS[quizStep];
+  container.innerHTML=`
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+    <div class="quiz-card">
+      <div class="quiz-advisor-tag" style="color:${q.color};border-color:${q.color}40;background:${q.color}0d">
+        <span style="font-size:18px">${q.symbol}</span>
+        ${q.advisor} · ${q.element}
+      </div>
+      <h2 class="quiz-question">${q.q}</h2>
+      <div class="quiz-opts" id="quiz-opts-wrap">
+        ${q.opts.map((o,i)=>`
+          <button class="quiz-opt" data-score="${o.score}" onclick="selectQuizOpt(this)">${o.text}</button>
+        `).join('')}
+      </div>
+      <div class="quiz-actions">
+        <span class="quiz-step-label">Question ${quizStep+1} of 5</span>
+        <button class="quiz-next-btn" id="quiz-next-btn" onclick="nextQuizStep()" disabled>
+          ${quizStep<4?'Next →':'See my archetype →'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function selectQuizOpt(el){
+  document.querySelectorAll('.quiz-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('quiz-next-btn').disabled=false;
+}
+
+function nextQuizStep(){
+  const sel=document.querySelector('.quiz-opt.selected');
+  if(!sel)return;
+  quizAnswers.push(sel.dataset.score);
+  quizStep++;
+  renderQuiz();
+}
+
+function showQuizResult(container){
+  const scores={rex:0,nadia:0,kai:0,mira:0,dante:0};
+  quizAnswers.forEach(a=>scores[a]++);
+  const top=Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
+  const adv=ADVISORS_DATA.find(a=>a.id===top);
+  container.innerHTML=`
+    <div class="archetype-result">
+      <div class="archetype-sigil-big" style="color:${adv.color}">${adv.symbol}</div>
+      <div class="archetype-element" style="color:${adv.color}">${adv.element} · ${adv.archetype}</div>
+      <div class="archetype-name" style="color:${adv.color}">${adv.name}</div>
+      <div class="archetype-role">${adv.role}</div>
+      <div class="archetype-quote" style="color:${adv.color};background:${adv.color}0d;border:1px solid ${adv.color}25">"${adv.quote}"</div>
+      <p class="archetype-desc">You are a ${adv.name}-type -- your natural instinct when facing decisions mirrors how ${adv.name} approaches the board. ${adv.desc} Your board will give ${adv.name}'s voice special weight, because that is how you think.</p>
+      <div class="archetype-traits">
+        ${adv.traits.map(t=>`<span class="archetype-trait" style="color:${adv.color};border-color:${adv.color}30;background:${adv.color}0d">${t}</span>`).join('')}
+      </div>
+      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
+        <button class="share-archetype-btn" onclick="showToast('Archetype card copied to clipboard -- share it!')">Share my archetype ✦</button>
+        <button class="retake-btn" onclick="quizStep=0;quizAnswers=[];renderQuiz()">Retake quiz</button>
+      </div>
+      <div style="margin-top:24px;padding:14px;background:var(--bg2);border-radius:8px;border:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">How your board sees you</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+          ${ADVISORS_DATA.map(a=>`
+            <div style="text-align:center;padding:8px 10px;border-radius:8px;background:${a.id===top?a.color+'18':'var(--bg3)'};border:1px solid ${a.id===top?a.color+'40':'var(--border)'}">
+              <div style="font-size:16px;color:${a.color};margin-bottom:3px">${a.symbol}</div>
+              <div style="font-size:10px;color:${a.id===top?a.color:'var(--text-dim)'};">${a.name}</div>
+              ${a.id===top?'<div style="font-size:9px;color:'+a.color+';margin-top:2px">PRIMARY</div>':''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* -- HELPERS -- */
+function getColor(id){return{rex:'#e8623a',nadia:'#2ab589',kai:'#8b7cf8',mira:'#d4921a',dante:'#d95c8a'}[id]||'#888'}
+function getName(id){return{rex:'Rex',nadia:'Nadia',kai:'Kai',mira:'Mira',dante:'Dante'}[id]||id}
+function getRole(id){return{rex:'Strategist',nadia:'Empath',kai:'Visionary',mira:'Realist',dante:"Devil's Advocate"}[id]||''}
+function fillNS(el){document.getElementById('ns-input').value=el.textContent}
+function saveProfile(){
+  const name=document.getElementById('pf-name').value;
+  document.getElementById('profile-name-display').textContent=name;
+  document.getElementById('sb-name').textContent=name.split(' ')[0];
+  const initials=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('sb-avatar').textContent=initials;
+  document.getElementById('profile-avatar-big').textContent=initials;
+  showToast('Profile saved');
+}
+function toggleSetting(el){el.classList.toggle('on');showToast(el.classList.contains('on')?'Setting enabled':'Setting disabled')}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+/* -- INIT -- */
+renderHistory('overview-history',3);
+renderZodiacPage();
+renderGreeting();
+renderHistory('full-history');
+renderAffinity();
+
+/* ── ZODIAC SIGN FROM BIRTHDAY ── */
+function getZodiacSign(dateStr) {
+  if (!dateStr) return {name:'Unknown',glyph:'?',color:'#c9a96e',element:'',planet:''};
+  const d = new Date(dateStr);
+  const m = d.getMonth()+1, day = d.getDate();
+  if((m===3&&day>=21)||(m===4&&day<=19)) return {name:'Aries',glyph:'♈',color:'#e85a3a',element:'Fire',planet:'Mars'};
+  if((m===4&&day>=20)||(m===5&&day<=20)) return {name:'Taurus',glyph:'♉',color:'#5aad6e',element:'Earth',planet:'Venus'};
+  if((m===5&&day>=21)||(m===6&&day<=20)) return {name:'Gemini',glyph:'♊',color:'#e8c030',element:'Air',planet:'Mercury'};
+  if((m===6&&day>=21)||(m===7&&day<=22)) return {name:'Cancer',glyph:'♋',color:'#7ab8d4',element:'Water',planet:'Moon'};
+  if((m===7&&day>=23)||(m===8&&day<=22)) return {name:'Leo',glyph:'♌',color:'#f09030',element:'Fire',planet:'Sun'};
+  if((m===8&&day>=23)||(m===9&&day<=22)) return {name:'Virgo',glyph:'♍',color:'#d4921a',element:'Earth',planet:'Mercury'};
+  if((m===9&&day>=23)||(m===10&&day<=22)) return {name:'Libra',glyph:'♎',color:'#d478b8',element:'Air',planet:'Venus'};
+  if((m===10&&day>=23)||(m===11&&day<=21)) return {name:'Scorpio',glyph:'♏',color:'#d95c8a',element:'Water',planet:'Pluto'};
+  if((m===11&&day>=22)||(m===12&&day<=21)) return {name:'Sagittarius',glyph:'♐',color:'#8b7cf8',element:'Fire',planet:'Jupiter'};
+  if((m===12&&day>=22)||(m===1&&day<=19)) return {name:'Capricorn',glyph:'♑',color:'#e8623a',element:'Earth',planet:'Saturn'};
+  if((m===1&&day>=20)||(m===2&&day<=18)) return {name:'Aquarius',glyph:'♒',color:'#5aa8e8',element:'Air',planet:'Uranus'};
+  return {name:'Pisces',glyph:'♓',color:'#2ab589',element:'Water',planet:'Neptune'};
+}
+
+function getUserSign() {
+  // Read from saved user object (set at registration)
+  try {
+    const saved = localStorage.getItem('lb_user');
+    if (saved) {
+      const user = JSON.parse(saved);
+      // Prefer stored zodiacSign, fall back to calculating from bday
+      if (user.zodiacSign) return user.zodiacSign;
+      if (user.bday) return getZodiacSign(user.bday);
+    }
+  } catch(e) {}
+  return null;
+}
+
+function renderZodiacPage() {
+  const sign = getUserSign();
+  if (!sign) return;
+
+  // Update sign badge
+  const badge = document.getElementById('zodiac-sign-badge');
+  if (badge) {
+    badge.innerHTML =
+      '<span style="font-size:20px;color:'+sign.color+'">'+sign.glyph+'</span>' +
+      '<div>' +
+        '<div style="font-size:12px;font-weight:500;color:'+sign.color+'">'+sign.name+'</div>' +
+        '<div style="font-size:10px;color:var(--text-dim)">'+sign.element+' · '+sign.planet+'</div>' +
+      '</div>';
+  }
+
+  // Update Master Card sign reference
+  const masterSub = document.querySelector('#page-zodiac .master-sign-sub-dynamic');
+  if (masterSub) {
+    masterSub.textContent = sign.element + ' · ' + sign.planet + ' · Your comprehensive daily reading';
+  }
+
+  // Update overview zodiac widget
+  const overviewSign = document.getElementById('overview-zodiac-sign');
+  if (overviewSign) {
+    overviewSign.textContent = sign.glyph;
+    overviewSign.style.color = sign.color;
+  }
+  const overviewSignLabel = document.getElementById('overview-zodiac-label');
+  if (overviewSignLabel) {
+    overviewSignLabel.textContent = sign.name + ' · 5 cards ready';
+  }
+}
+
+
+function renderGreeting() {
+  try {
+    const saved = localStorage.getItem('lb_user');
+    if (!saved) return;
+    const user = JSON.parse(saved);
+    const firstName = user.name ? user.name.split(' ')[0] : '';
+    if (!firstName) return;
+
+    // Topbar welcome
+    const tw = document.getElementById('topbar-welcome');
+    if (tw) tw.textContent = 'Welcome back, ' + firstName;
+
+    // Overview greeting with time of day
+    const hour = new Date().getHours();
+    const timeGreeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    const greet = document.getElementById('overview-greeting');
+    if (greet) greet.textContent = timeGreeting + ', ' + firstName + '.';
+
+    // Sidebar name
+    const sbName = document.getElementById('sb-name');
+    if (sbName) sbName.textContent = firstName;
+
+    // Profile display
+    const profileName = document.getElementById('profile-name-display');
+    if (profileName && user.name) profileName.textContent = user.name;
+    const profileEmail = document.getElementById('profile-email-display');
+    if (profileEmail && user.email) profileEmail.textContent = user.email;
+
+    // Profile form values
+    const pfName = document.getElementById('pf-name');
+    if (pfName && user.name) pfName.value = user.name;
+    const pfEmail = document.getElementById('pf-email');
+    if (pfEmail && user.email) pfEmail.value = user.email;
+  } catch(e) {}
+}
+
+</script>
+</body>
+</html>

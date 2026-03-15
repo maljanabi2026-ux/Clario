@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="Clario — Your personal AI board of directors. Five distinct advisors debate your hardest life decisions. Pure clarity.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clario — Board Decisions &amp; Daily Zodiac | clarioai.ae</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08070f;--navy:#1a1642;--gold-brand:#c9a96e;
+  --bg2:#0f0d1c;
+  --bg3:#161328;
+  --gold:#c9a96e;
+  --gold-dim:#8a7048;
+  --cream:#f0ead8;
+  --cream-dim:#a89d87;
+  --purple:#6b5ce7;
+  --purple-soft:#9d8ff5;
+  --border:rgba(201,169,110,0.12);
+  --border-bright:rgba(201,169,110,0.28);
+  --rex:#e8623a;
+  --nadia:#2ab589;
+  --kai:#8b7cf8;
+  --mira:#d4921a;
+  --dante:#d95c8a;
+  --text:#f0ead8;
+  --text-muted:#8a8098;
+  --text-dim:#4a4460;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Outfit',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  line-height:1.6;
+}
+
+/* ── STARFIELD ── */
+#stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) ease-in-out infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:var(--min,0.1)}50%{opacity:var(--max,0.7)}}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:20px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid transparent;
+  transition:all .4s;
+}
+nav.scrolled{background:rgba(8,7,15,0.92);border-bottom-color:var(--border);backdrop-filter:blur(12px)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-icon{width:auto;height:auto;border-radius:0;background:none;display:flex;align-items:center;justify-content:center}
+.nav-logo-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--cream);letter-spacing:.02em}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-link{font-size:13px;color:var(--text-muted);text-decoration:none;letter-spacing:.04em;transition:color .2s}
+.nav-link:hover{color:var(--cream)}
+.nav-cta{padding:8px 20px;border:1px solid var(--border-bright);border-radius:6px;font-size:13px;color:var(--gold);letter-spacing:.04em;text-decoration:none;transition:all .2s;background:transparent}
+.nav-cta:hover{background:rgba(201,169,110,0.1);border-color:var(--gold)}
+
+/* ── SECTIONS ── */
+section{position:relative;z-index:1}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:120px 24px 80px;text-align:center;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:28px;
+  padding:6px 16px;border:1px solid var(--border-bright);border-radius:20px;
+  background:rgba(201,169,110,0.05);
+  animation:fadeUp .8s ease both;
+}
+.hero-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:.4}50%{opacity:1}}
+.hero-h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(44px,8vw,96px);
+  font-weight:300;
+  line-height:1.02;
+  color:var(--cream);
+  margin-bottom:20px;
+  letter-spacing:-.02em;
+  animation:fadeUp .8s .15s ease both;
+}
+.hero-h1 em{font-style:italic;color:var(--gold)}
+.hero-h1 strong{font-weight:600;color:#fff}
+.hero-sub{
+  font-size:clamp(15px,2vw,18px);color:var(--text-muted);
+  max-width:520px;margin:0 auto 44px;line-height:1.65;
+  font-weight:300;
+  animation:fadeUp .8s .3s ease both;
+}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;animation:fadeUp .8s .45s ease both}
+.btn-primary{
+  padding:14px 32px;background:var(--gold);color:var(--bg);
+  border:none;border-radius:7px;font-size:14px;font-family:'Outfit',sans-serif;
+  font-weight:500;cursor:pointer;letter-spacing:.03em;transition:all .2s;text-decoration:none;display:inline-block;
+}
+.btn-primary:hover{background:var(--cream);transform:translateY(-1px)}
+.btn-ghost{
+  padding:14px 32px;background:transparent;color:var(--cream-dim);
+  border:1px solid var(--border-bright);border-radius:7px;font-size:14px;
+  font-family:'Outfit',sans-serif;cursor:pointer;letter-spacing:.03em;transition:all .2s;text-decoration:none;display:inline-block;
+}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.hero-disclaimer{font-size:11px;color:var(--text-dim);margin-top:24px;animation:fadeUp .8s .6s ease both}
+
+/* HERO CONSTELLATION */
+.hero-constellation{
+  position:relative;width:100%;max-width:700px;height:120px;
+  margin:40px auto 0;
+  animation:fadeUp .8s .5s ease both;
+}
+.constellation-line{stroke:var(--gold);stroke-width:.5;stroke-dasharray:4 4;opacity:.3}
+.advisor-node{cursor:pointer;transition:all .3s}
+.advisor-node:hover .node-ring{opacity:1}
+.node-ring{opacity:0;transition:opacity .3s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HOW IT WORKS ── */
+.how{padding:100px 24px;text-align:center}
+.section-eyebrow{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:block}
+.section-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,52px);font-weight:300;color:var(--cream);margin-bottom:14px;letter-spacing:-.01em;line-height:1.1}
+.section-h2 em{font-style:italic;color:var(--gold)}
+.section-sub{font-size:15px;color:var(--text-muted);max-width:480px;margin:0 auto 60px;font-weight:300}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;max-width:900px;margin:0 auto;position:relative}
+.steps::before{content:'';position:absolute;top:48px;left:17%;right:17%;height:1px;background:linear-gradient(90deg,transparent,var(--border-bright),transparent)}
+.step{padding:32px 24px;position:relative}
+.step-num{
+  width:48px;height:48px;border-radius:50%;
+  border:1px solid var(--border-bright);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);
+  margin:0 auto 20px;background:var(--bg2);position:relative;z-index:1;
+}
+.step h3{font-size:15px;font-weight:500;color:var(--cream);margin-bottom:8px;letter-spacing:.02em}
+.step p{font-size:13px;color:var(--text-muted);line-height:1.65;font-weight:300}
+
+/* ── ADVISORS ── */
+.advisors-section{padding:100px 24px}
+.advisors-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;max-width:1100px;margin:0 auto;background:var(--border)}
+.advisor-card{
+  background:var(--bg);padding:36px 24px 32px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  cursor:pointer;transition:background .3s;
+  position:relative;overflow:hidden;
+}
+.advisor-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%, var(--c,#fff) 0%, transparent 70%);
+  opacity:0;transition:opacity .4s;
+}
+.advisor-card:hover{background:var(--bg2)}
+.advisor-card:hover::before{opacity:.04}
+.advisor-card:hover .adv-sigil{transform:rotate(var(--rot,5deg)) scale(1.06)}
+
+/* SIGIL */
+.adv-sigil{
+  width:72px;height:72px;margin-bottom:20px;
+  transition:transform .4s ease;
+  position:relative;z-index:1;
+}
+
+/* ADVISOR INFO */
+.adv-element{font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;font-weight:500}
+.adv-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--cream);margin-bottom:2px;letter-spacing:.02em}
+.adv-role{font-size:11px;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
+.adv-archetype{
+  font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;
+  padding:4px 12px;border-radius:12px;margin-bottom:14px;
+}
+.adv-desc{font-size:12px;color:var(--text-muted);line-height:1.6;font-weight:300}
+.adv-trait-row{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.adv-trait{font-size:10px;padding:3px 9px;border-radius:8px;letter-spacing:.03em}
+
+/* ── DEBATE PREVIEW ── */
+.debate-section{padding:100px 24px;text-align:center}
+.debate-window{
+  max-width:720px;margin:0 auto;
+  background:var(--bg2);border:1px solid var(--border-bright);
+  border-radius:16px;overflow:hidden;
+  box-shadow:0 0 80px rgba(107,92,231,0.08);
+}
+.debate-titlebar{
+  padding:14px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+  background:rgba(201,169,110,0.03);
+}
+.debate-dot{width:10px;height:10px;border-radius:50%}
+.debate-title{font-size:12px;color:var(--text-muted);margin-left:4px;letter-spacing:.04em}
+.debate-decision{
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,0.02);
+}
+.debate-decision-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:5px}
+.debate-decision-text{font-size:13px;color:var(--cream-dim);font-style:italic;line-height:1.5}
+.debate-messages{padding:20px;display:flex;flex-direction:column;gap:14px;text-align:left}
+.dmsg{display:flex;gap:11px}
+.dmsg-av{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:11px;
+  font-weight:500;color:#fff;font-family:'Cormorant Garamond',serif;
+}
+.dmsg-body{flex:1}
+.dmsg-name{font-size:11px;font-weight:500;letter-spacing:.04em;margin-bottom:4px}
+.dmsg-text{
+  font-size:12px;color:var(--text-muted);line-height:1.6;
+  padding:10px 13px;border-radius:3px 10px 10px 10px;
+  background:rgba(255,255,255,0.03);border:1px solid var(--border);
+  font-weight:300;
+}
+.debate-cta{padding:20px;border-top:1px solid var(--border);text-align:center}
+.debate-cta p{font-size:13px;color:var(--text-muted);margin-bottom:12px;font-style:italic}
+
+/* ── PRICING ── */
+.pricing-section{padding:100px 24px;text-align:center}
+.billing-toggle{
+  display:inline-flex;align-items:center;gap:0;
+  border:1px solid var(--border-bright);border-radius:8px;
+  overflow:hidden;margin-bottom:50px;
+}
+.billing-btn{
+  padding:9px 24px;font-size:13px;font-family:'Outfit',sans-serif;
+  cursor:pointer;border:none;transition:all .2s;letter-spacing:.03em;
+  background:transparent;color:var(--text-muted);
+}
+.billing-btn.active{background:var(--gold);color:var(--bg);font-weight:500}
+.save-badge{
+  font-size:10px;padding:2px 8px;border-radius:6px;
+  background:rgba(42,181,137,0.15);color:#2ab589;
+  margin-left:6px;font-weight:500;
+}
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;max-width:960px;margin:0 auto 24px;
+  background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;
+}
+.pricing-card{
+  background:var(--bg2);padding:28px 20px;
+  display:flex;flex-direction:column;transition:background .2s;
+  position:relative;
+}
+.pricing-card.featured{background:var(--bg3)}
+.pricing-card.featured::after{
+  content:'Most popular';
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 14px;background:var(--gold);color:var(--bg);
+  border-radius:0 0 8px 8px;font-weight:500;
+}
+.plan-tier{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px;margin-top:8px}
+.plan-price-wrap{margin-bottom:4px}
+.plan-price-num{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;color:var(--cream);line-height:1}
+.plan-price-per{font-size:12px;color:var(--text-muted)}
+.plan-annual-note{font-size:11px;color:var(--text-dim);margin-bottom:16px;height:16px;transition:all .3s}
+.plan-sessions{
+  font-size:13px;font-weight:500;color:var(--cream);
+  padding:8px 0;border-bottom:1px solid var(--border);
+  margin-bottom:16px;letter-spacing:.02em;
+}
+.plan-features{flex:1;display:flex;flex-direction:column;gap:7px;margin-bottom:20px;text-align:left}
+.pf{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--text-muted);font-weight:300}
+.pf::before{content:'·';color:var(--gold);font-size:16px;flex-shrink:0;line-height:1.2}
+.pf.no{opacity:.35}
+.pf.no::before{content:'·';color:var(--text-dim)}
+.plan-btn{
+  padding:11px;border-radius:7px;font-size:13px;font-family:'Outfit',sans-serif;
+  font-weight:500;cursor:pointer;letter-spacing:.03em;transition:all .2s;border:none;
+}
+.plan-btn-gold{background:var(--gold);color:var(--bg)}
+.plan-btn-gold:hover{background:var(--cream)}
+.plan-btn-outline{background:transparent;border:1px solid var(--border-bright);color:var(--text-muted)}
+.plan-btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.pricing-note{font-size:12px;color:var(--text-dim);margin-top:16px}
+
+/* ── TESTIMONIALS ── */
+.social-section{padding:80px 24px;text-align:center}
+.social-pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:800px;margin:0 auto}
+.social-pill{
+  padding:14px 20px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;text-align:left;max-width:240px;
+  transition:border-color .2s;
+}
+.social-pill:hover{border-color:var(--border-bright)}
+.social-pill-text{font-size:13px;color:var(--text-muted);line-height:1.55;margin-bottom:10px;font-style:italic;font-weight:300}
+.social-pill-author{font-size:11px;color:var(--text-dim);letter-spacing:.04em}
+.social-pill-platform{font-size:10px;color:var(--gold-dim);margin-top:2px}
+
+/* ── FINAL CTA ── */
+.final-cta{padding:120px 24px;text-align:center}
+.final-cta-h{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,6vw,72px);font-weight:300;color:var(--cream);line-height:1.1;margin-bottom:20px}
+.final-cta-h em{font-style:italic;color:var(--gold)}
+.final-cta-sub{font-size:16px;color:var(--text-muted);margin-bottom:40px;font-weight:300}
+
+/* ── FOOTER ── */
+footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream-dim)}
+.footer-links{display:flex;gap:24px}
+.footer-link{font-size:12px;color:var(--text-dim);text-decoration:none;transition:color .2s;letter-spacing:.03em}
+.footer-link:hover{color:var(--gold)}
+.footer-disc{font-size:11px;color:var(--text-dim);max-width:400px;line-height:1.5}
+
+/* ── DIVIDER ── */
+.divider-line{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);margin:0 auto 60px}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:16px 20px}
+  .nav-links{display:none}
+  .advisors-grid{grid-template-columns:repeat(2,1fr)}
+  .advisors-grid .advisor-card:last-child{grid-column:1/-1}
+  .pricing-grid{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr}
+  .steps::before{display:none}
+  footer{flex-direction:column;text-align:center}
+  .footer-links{justify-content:center}
+}
+@media(max-width:480px){
+  .advisors-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+}
+
+/* ── ZODIAC SECTION ── */
+.zodiac-section{padding:100px 24px;text-align:center}
+.zodiac-card-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:1100px;margin:0 auto 20px}
+.zc{background:var(--bg2);border:1px solid rgba(var(--zc-rgb,201,169,110),.2);border-top:2px solid var(--zc,var(--gold));border-radius:12px;padding:16px 14px;text-align:left;transition:transform .2s}
+.zc:hover{transform:translateY(-3px)}
+.zc-icon{font-size:20px;color:var(--zc,var(--gold));margin-bottom:8px}
+.zc-type{font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--zc,var(--gold));margin-bottom:4px}
+.zc-title{font-size:13px;font-weight:500;color:var(--cream);margin-bottom:8px}
+.zc-text{font-size:11px;color:var(--text-muted);line-height:1.55;margin-bottom:10px;font-style:italic;font-weight:300}
+.zc-score{display:flex;align-items:center;gap:3px}
+.zc-dot{width:6px;height:6px;border-radius:50%;background:var(--zc,var(--gold));opacity:.2}
+.zc-dot.filled{opacity:.9}
+.zc-score-label{font-size:10px;color:var(--zc,var(--gold));margin-left:5px;opacity:.7}
+.master-card{max-width:1100px;margin:0 auto;background:var(--bg2);border:1px solid rgba(201,169,110,.3);border-radius:16px;padding:24px 28px;text-align:left}
+.master-card-badge{font-size:11px;font-weight:500;letter-spacing:.06em;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.master-card-sign{display:flex;align-items:center;gap:14px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid rgba(201,169,110,.15)}
+.master-sign-glyph{font-size:36px;color:var(--nadia,#2ab589);line-height:1}
+.master-sign-name{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream);font-weight:400}
+.master-sign-sub{font-size:11px;color:var(--text-muted);margin-top:2px;letter-spacing:.03em}
+.master-card-text{font-size:13px;color:var(--text-muted);line-height:1.75;margin-bottom:14px;font-weight:300;font-style:italic}
+.master-card-footer{display:flex;flex-wrap:wrap;gap:10px}
+.master-card-tag{font-size:11px;font-weight:500}
+
+/* ── UNIFIED PRICING ── */
+.trial-banner{display:flex;align-items:flex-start;gap:20px;max-width:960px;margin:0 auto 40px;padding:20px 24px;background:rgba(201,169,110,.06);border:1px solid rgba(201,169,110,.25);border-radius:14px;text-align:left}
+.trial-num{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:var(--gold);line-height:1;flex-shrink:0}
+.trial-title{font-size:15px;font-weight:500;color:var(--cream);margin-bottom:6px}
+.trial-sub{font-size:12px;color:var(--text-muted);line-height:1.6;font-weight:300}
+.unified-pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;max-width:1100px;margin:0 auto 24px;background:rgba(201,169,110,.1);border:1px solid rgba(201,169,110,.1);border-radius:14px;overflow:hidden}
+.uplan{background:var(--bg2);padding:24px 20px;display:flex;flex-direction:column;position:relative}
+.uplan-featured{background:var(--bg3)}
+.uplan-popular-badge{position:absolute;top:0;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:4px 14px;background:var(--gold);color:var(--bg);border-radius:0 0 8px 8px;font-weight:500}
+.uplan-service-tag{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:8px;border:1px solid;display:inline-block;margin-bottom:12px;margin-top:8px}
+.uplan-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--cream);margin-bottom:6px;letter-spacing:.01em}
+.uplan-price-row{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}
+.uplan-price{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;color:var(--cream);line-height:1}
+.uplan-per{font-size:12px;color:var(--text-muted)}
+.uplan-annual-note{font-size:11px;color:var(--text-muted);margin-bottom:8px;min-height:16px;transition:all .3s}
+.uplan-desc{font-size:12px;color:var(--text-muted);line-height:1.5;margin-bottom:14px;font-weight:300}
+.uplan-divider{height:1px;background:rgba(201,169,110,.1);margin-bottom:14px}
+.uplan-features{flex:1;display:flex;flex-direction:column;gap:6px;margin-bottom:20px}
+.uf{font-size:11px;color:var(--text-muted);display:flex;align-items:flex-start;gap:7px;line-height:1.5;font-weight:300}
+.uf::before{content:"·";color:var(--gold);font-size:14px;flex-shrink:0;line-height:1.2}
+.uf.no{opacity:.3}
+.uf.no::before{color:var(--text-muted)}
+.bundle-highlight{color:var(--cream-dim)}
+.bundle-highlight::before{content:"✦";font-size:10px;color:var(--gold)}
+.uplan-btn{display:block;padding:11px;border-radius:8px;font-size:13px;font-family:'Outfit',sans-serif;font-weight:500;cursor:pointer;text-align:center;text-decoration:none;transition:all .2s;letter-spacing:.02em}
+.uplan-btn-gold{background:var(--gold);color:var(--bg)}
+.uplan-btn-gold:hover{background:var(--cream)}
+.uplan-btn-outline{background:transparent;border:1px solid rgba(201,169,110,.3);color:var(--text-muted)}
+.uplan-btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+
+@media(max-width:900px){
+  .unified-pricing-grid{grid-template-columns:1fr 1fr}
+  .zodiac-card-row{grid-template-columns:1fr 1fr}
+  .zodiac-card-row .zc:last-child{grid-column:1/-1}
+}
+@media(max-width:540px){
+  .unified-pricing-grid{grid-template-columns:1fr}
+  .zodiac-card-row{grid-template-columns:1fr}
+  .zodiac-card-row .zc:last-child{grid-column:auto}
+  .trial-banner{flex-direction:column;gap:10px}
+}
+
+</style>
+</head>
+<body>
+
+<!-- STARS -->
+<div id="stars"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a class="nav-logo" href="#"><svg width="170" height="38" viewBox="0 0 170 38" fill="none"><rect x="0" y="2" width="34" height="34" rx="8" fill="#0f0d1c"/><rect x="0" y="2" width="34" height="34" rx="8" fill="none" stroke="#c9a96e" stroke-width=".7" opacity=".32"/><circle cx="17" cy="19" r="11" stroke="#c9a96e" stroke-width=".5" opacity=".12" stroke-dasharray="2 3"/><circle cx="10.5" cy="23.5" r="2" fill="#c9a96e" opacity=".32"/><circle cx="14.5" cy="17.5" r="2" fill="#c9a96e" opacity=".58"/><circle cx="20" cy="14" r="2.4" fill="#c9a96e" opacity=".95"/><circle cx="17.5" cy="24.5" r="1.7" fill="#c9a96e" opacity=".22"/><circle cx="24.5" cy="21.5" r="1.7" fill="#c9a96e" opacity=".5"/><path d="M10.5 23.5 L14.5 17.5 L20 14" stroke="#c9a96e" stroke-width=".4" fill="none" opacity=".18" stroke-linecap="round"/><text x="44" y="19" font-family="Cormorant Garamond,Georgia,serif" font-size="19" font-weight="700" fill="#f0ead8" letter-spacing="5">CLARIO</text><text x="44" y="31" font-family="Arial,sans-serif" font-size="6.5" fill="#c9a96e" letter-spacing="3" opacity=".6">CLARIOAI.AE</text></svg></a>
+  <div class="nav-links">
+    <a class="nav-link" href="#advisors">The Board</a>
+    <a class="nav-link" href="#zodiac">Daily cards</a>
+    <a class="nav-link" href="#how">How it works</a>
+    <a class="nav-link" href="#pricing">Pricing</a>
+  </div>
+  <a class="nav-cta" href="#">Enter the boardroom →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span>Board decisions &amp; daily zodiac — one platform</div>
+  <h1 class="hero-h1">
+  Five minds.<br>
+    <em>One decision.</em><br>
+    Pure clarity.
+  </h1>
+  <p class="hero-sub">Two powerful services in one platform. A board of five AI advisors for your hardest decisions. Daily AI-powered zodiac cards personalized to your sign. Both with a 3-day free trial.</p>
+  <div class="hero-btns">
+    <a class="btn-primary" href="#">Convene your board →</a>
+    <a class="btn-ghost" href="#advisors">Meet the advisors</a>
+  </div>
+  <p class="hero-disclaimer">Free to start · No credit card required · Perspectives only — not financial, legal, or medical advice</p>
+
+  <!-- CONSTELLATION -->
+  <div class="hero-constellation">
+    <svg width="100%" height="120" viewBox="0 0 700 120" preserveAspectRatio="xMidYMid meet">
+      <!-- Connecting lines -->
+      <line class="constellation-line" x1="100" y1="60" x2="215" y2="60"/>
+      <line class="constellation-line" x1="255" y1="60" x2="330" y2="60"/>
+      <line class="constellation-line" x1="370" y1="60" x2="445" y2="60"/>
+      <line class="constellation-line" x1="485" y1="60" x2="600" y2="60"/>
+      <!-- Rex -->
+      <g class="advisor-node" style="--c:var(--rex)">
+        <circle cx="100" cy="60" r="28" fill="rgba(232,98,58,0.06)" stroke="rgba(232,98,58,0.25)" stroke-width="1"/>
+        <circle class="node-ring" cx="100" cy="60" r="36" fill="none" stroke="rgba(232,98,58,0.2)" stroke-width="1"/>
+        <text x="100" y="54" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" fill="#e8623a">♛</text>
+        <text x="100" y="70" text-anchor="middle" font-family="Outfit" font-size="9" fill="rgba(232,98,58,0.7)" letter-spacing="1">REX</text>
+        <text x="100" y="100" text-anchor="middle" font-family="Outfit" font-size="9" fill="rgba(255,255,255,0.25)" letter-spacing=".5">Fire</text>
+      </g>
+      <!-- Nadia -->
+      <g class="advisor-node" style="--c:var(--nadia)">
+        <circle cx="235" cy="60" r="28" fill="rgba(42,181,137,0.06)" stroke="rgba(42,181,137,0.25)" stroke-width="1"/>
+        <circle class="node-ring" cx="235" cy="60" r="36" fill="none" stroke="rgba(42,181,137,0.2)" stroke-width="1"/>
+        <text x="235" y="54" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" fill="#2ab589">☽</text>
+        <text x="235" y="70" text-anchor="middle" font-family="Outfit" font-size="9" fill="rgba(42,181,137,0.7)" letter-spacing="1">NADIA</text>
+        <text x="235" y="100" text-anchor="middle" font-family="Outfit" font-size="9" fill="rgba(255,255,255,0.25)" letter-spacing=".5">Water</text>
+      </g>
+      <!-- Kai -->
+      <g class="advisor-node" style="--c:var(--kai)">
+        <circle cx="350" cy="60" r="28" fill="rgba(139,124,248,0.06)" stroke="rgba(139,124,248,0.25)" stroke-width="1"/>
+        <circle class="node-ring" cx="350" cy="60" r="36" fill="none" stroke="rgba(139,124,248,0.2)" stroke-width="1"/>
+        <text x="350" y="54" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" fill="#8b7cf8">✦</text>
+        <text x="350" y="70" text-anchor="middle" font-family="Outfit" font-size="9" fill="rgba(139,124,248,0.7)" letter-spacing="1">KAI</text>
+        <text x="350" y="100" text-anchor="middle" font-family="Outfit" font-size="9" fill="rgba(255,255,255,0.25)" letter-spacing=".5">Air</text>
+      </g>
+      <!-- Mira -->
+      <g class="advisor-node" style="--c:var(--mira)">
+        <circle cx="465" cy="60" r="28" fill="rgba(212,146,26,0.06)" stroke="rgba(212,146,26,0.25)" stroke-width="1"/>
+        <circle class="node-ring" cx="465" cy="60" r="36" fill="none" stroke="rgba(212,146,26,0.2)" stroke-width="1"/>
+        <text x="465" y="54" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" fill="#d4921a">◈</text>
+        <text x="465" y="70" text-anchor="middle" font-family="Outfit" font-size="9" fill="rgba(212,146,26,0.7)" letter-spacing="1">MIRA</text>
+        <text x="465" y="100" text-anchor="middle" font-family="Outfit" font-size="9" fill="rgba(255,255,255,0.25)" letter-spacing=".5">Earth</text>
+      </g>
+      <!-- Dante -->
+      <g class="advisor-node" style="--c:var(--dante)">
+        <circle cx="600" cy="60" r="28" fill="rgba(217,92,138,0.06)" stroke="rgba(217,92,138,0.25)" stroke-width="1"/>
+        <circle class="node-ring" cx="600" cy="60" r="36" fill="none" stroke="rgba(217,92,138,0.2)" stroke-width="1"/>
+        <text x="600" y="54" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" fill="#d95c8a">⊗</text>
+        <text x="600" y="70" text-anchor="middle" font-family="Outfit" font-size="9" fill="rgba(217,92,138,0.7)" letter-spacing="1">DANTE</text>
+        <text x="600" y="100" text-anchor="middle" font-family="Outfit" font-size="9" fill="rgba(255,255,255,0.25)" letter-spacing=".5">Void</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <span class="section-eyebrow">How it works</span>
+  <h2 class="section-h2">Three steps to <em>clarity</em></h2>
+  <p class="section-sub">No therapy. No guesswork. Just five distinct minds pulling your decision apart until the truth is visible.</p>
+  <div class="divider-line"></div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">I</div>
+      <h3>Submit your decision</h3>
+      <p>Describe what you're wrestling with — in plain language. A career move, a relationship, a business bet, a life change. The more specific, the sharper the debate.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">II</div>
+      <h3>The board debates</h3>
+      <p>All five advisors read what each other said and respond — Rex challenges Nadia, Dante attacks the consensus forming, Mira demands the numbers. Real tension. Real disagreement.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">III</div>
+      <h3>You decide</h3>
+      <p>The board synthesises into one clear recommendation with every advisor's verdict. You've heard every angle. Now the decision — and the power — is entirely yours.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ADVISORS -->
+<section class="advisors-section" id="advisors">
+  <div style="text-align:center;margin-bottom:60px">
+    <span class="section-eyebrow">The five archetypes</span>
+    <h2 class="section-h2">Meet your <em>board</em></h2>
+    <p class="section-sub" style="margin-bottom:0">Each advisor carries a distinct element, archetype, and philosophy. Together they cover every angle a decision can have.</p>
+  </div>
+  <div class="advisors-grid">
+
+    <!-- REX -->
+    <div class="advisor-card" style="--c:var(--rex);--rot:6deg">
+      <svg class="adv-sigil" viewBox="0 0 72 72" fill="none">
+        <circle cx="36" cy="36" r="34" stroke="#e8623a" stroke-width=".6" stroke-dasharray="3 3" opacity=".3"/>
+        <circle cx="36" cy="36" r="26" stroke="#e8623a" stroke-width=".8" opacity=".15"/>
+        <!-- Crown sigil -->
+        <path d="M20 46 L20 38 L26 30 L32 38 L36 26 L40 38 L46 30 L52 38 L52 46 Z" stroke="#e8623a" stroke-width="1.2" fill="rgba(232,98,58,0.06)" stroke-linejoin="round"/>
+        <rect x="18" y="46" width="36" height="4" rx="2" fill="#e8623a" opacity=".6"/>
+        <circle cx="36" cy="26" r="2.5" fill="#e8623a" opacity=".8"/>
+        <circle cx="26" cy="30" r="2" fill="#e8623a" opacity=".5"/>
+        <circle cx="46" cy="30" r="2" fill="#e8623a" opacity=".5"/>
+      </svg>
+      <div class="adv-element" style="color:var(--rex)">Fire · The Emperor</div>
+      <div class="adv-name">Rex</div>
+      <div class="adv-role">The Strategist</div>
+      <div class="adv-archetype" style="color:rgba(232,98,58,0.7);background:rgba(232,98,58,0.06);border:1px solid rgba(232,98,58,0.15)">"Dominion through strategy"</div>
+      <div class="adv-desc">Rex thinks in systems and 10-year horizons. He will never let emotions cloud a decision — and he'll tell you that directly, without apology.</div>
+      <div class="adv-trait-row">
+        <span class="adv-trait" style="background:rgba(232,98,58,0.08);color:rgba(232,98,58,0.7);border:1px solid rgba(232,98,58,0.15)">Strategic</span>
+        <span class="adv-trait" style="background:rgba(232,98,58,0.08);color:rgba(232,98,58,0.7);border:1px solid rgba(232,98,58,0.15)">Direct</span>
+        <span class="adv-trait" style="background:rgba(232,98,58,0.08);color:rgba(232,98,58,0.7);border:1px solid rgba(232,98,58,0.15)">Long-term</span>
+      </div>
+    </div>
+
+    <!-- NADIA -->
+    <div class="advisor-card" style="--c:var(--nadia);--rot:-5deg">
+      <svg class="adv-sigil" viewBox="0 0 72 72" fill="none">
+        <circle cx="36" cy="36" r="34" stroke="#2ab589" stroke-width=".6" stroke-dasharray="3 3" opacity=".3"/>
+        <circle cx="36" cy="36" r="26" stroke="#2ab589" stroke-width=".8" opacity=".15"/>
+        <!-- Crescent + mirror sigil -->
+        <path d="M36 16 C26 16, 18 24, 18 36 C18 48, 26 56, 36 56 C30 50, 27 43, 27 36 C27 29, 30 22, 36 16Z" fill="#2ab589" opacity=".25"/>
+        <path d="M36 16 C46 16, 54 24, 54 36 C54 48, 46 56, 36 56" stroke="#2ab589" stroke-width="1.5" fill="none" opacity=".6"/>
+        <circle cx="36" cy="36" r="6" stroke="#2ab589" stroke-width="1" fill="rgba(42,181,137,0.1)" opacity=".7"/>
+        <line x1="36" y1="42" x2="36" y2="56" stroke="#2ab589" stroke-width="1" opacity=".4"/>
+        <ellipse cx="36" cy="57" rx="6" ry="2.5" stroke="#2ab589" stroke-width="1" fill="none" opacity=".4"/>
+      </svg>
+      <div class="adv-element" style="color:var(--nadia)">Water · The Oracle</div>
+      <div class="adv-name">Nadia</div>
+      <div class="adv-role">The Empath</div>
+      <div class="adv-archetype" style="color:rgba(42,181,137,0.7);background:rgba(42,181,137,0.06);border:1px solid rgba(42,181,137,0.15)">"Truth through feeling"</div>
+      <div class="adv-desc">Nadia asks the question nobody else dares to. She sees what you didn't say — and that's usually the thing that changes everything.</div>
+      <div class="adv-trait-row">
+        <span class="adv-trait" style="background:rgba(42,181,137,0.08);color:rgba(42,181,137,0.7);border:1px solid rgba(42,181,137,0.15)">Perceptive</span>
+        <span class="adv-trait" style="background:rgba(42,181,137,0.08);color:rgba(42,181,137,0.7);border:1px solid rgba(42,181,137,0.15)">Warm</span>
+        <span class="adv-trait" style="background:rgba(42,181,137,0.08);color:rgba(42,181,137,0.7);border:1px solid rgba(42,181,137,0.15)">Honest</span>
+      </div>
+    </div>
+
+    <!-- KAI -->
+    <div class="advisor-card" style="--c:var(--kai);--rot:4deg">
+      <svg class="adv-sigil" viewBox="0 0 72 72" fill="none">
+        <circle cx="36" cy="36" r="34" stroke="#8b7cf8" stroke-width=".6" stroke-dasharray="3 3" opacity=".3"/>
+        <circle cx="36" cy="36" r="26" stroke="#8b7cf8" stroke-width=".8" opacity=".15"/>
+        <!-- Comet sigil -->
+        <path d="M52 20 L24 44" stroke="#8b7cf8" stroke-width="2" stroke-linecap="round" opacity=".3"/>
+        <path d="M52 20 L30 50" stroke="#8b7cf8" stroke-width="1" stroke-linecap="round" opacity=".2"/>
+        <path d="M52 20 L36 52" stroke="#8b7cf8" stroke-width=".5" stroke-linecap="round" opacity=".15"/>
+        <circle cx="52" cy="20" r="6" fill="#8b7cf8" opacity=".7"/>
+        <circle cx="52" cy="20" r="10" stroke="#8b7cf8" stroke-width=".8" fill="none" opacity=".25"/>
+        <path d="M36 36 L40 28 L44 36 L36 36Z" stroke="#8b7cf8" stroke-width=".8" fill="rgba(139,124,248,0.15)" opacity=".8"/>
+      </svg>
+      <div class="adv-element" style="color:var(--kai)">Air · The Wanderer</div>
+      <div class="adv-name">Kai</div>
+      <div class="adv-role">The Visionary</div>
+      <div class="adv-archetype" style="color:rgba(139,124,248,0.7);background:rgba(139,124,248,0.06);border:1px solid rgba(139,124,248,0.15)">"Freedom through vision"</div>
+      <div class="adv-desc">Kai sees the option nobody put on the table. When the board debates A vs B, Kai asks why C doesn't exist — and then shows you how to build it.</div>
+      <div class="adv-trait-row">
+        <span class="adv-trait" style="background:rgba(139,124,248,0.08);color:rgba(139,124,248,0.7);border:1px solid rgba(139,124,248,0.15)">Expansive</span>
+        <span class="adv-trait" style="background:rgba(139,124,248,0.08);color:rgba(139,124,248,0.7);border:1px solid rgba(139,124,248,0.15)">Bold</span>
+        <span class="adv-trait" style="background:rgba(139,124,248,0.08);color:rgba(139,124,248,0.7);border:1px solid rgba(139,124,248,0.15)">Curious</span>
+      </div>
+    </div>
+
+    <!-- MIRA -->
+    <div class="advisor-card" style="--c:var(--mira);--rot:-4deg">
+      <svg class="adv-sigil" viewBox="0 0 72 72" fill="none">
+        <circle cx="36" cy="36" r="34" stroke="#d4921a" stroke-width=".6" stroke-dasharray="3 3" opacity=".3"/>
+        <circle cx="36" cy="36" r="26" stroke="#d4921a" stroke-width=".8" opacity=".15"/>
+        <!-- Crystal/hexagon sigil -->
+        <polygon points="36,16 52,25 52,47 36,56 20,47 20,25" stroke="#d4921a" stroke-width="1.2" fill="rgba(212,146,26,0.06)" opacity=".8"/>
+        <polygon points="36,24 45,29 45,43 36,48 27,43 27,29" stroke="#d4921a" stroke-width=".8" fill="rgba(212,146,26,0.04)" opacity=".6"/>
+        <line x1="36" y1="16" x2="36" y2="56" stroke="#d4921a" stroke-width=".5" opacity=".25"/>
+        <line x1="20" y1="25" x2="52" y2="47" stroke="#d4921a" stroke-width=".5" opacity=".25"/>
+        <line x1="52" y1="25" x2="20" y2="47" stroke="#d4921a" stroke-width=".5" opacity=".25"/>
+        <circle cx="36" cy="36" r="3" fill="#d4921a" opacity=".8"/>
+      </svg>
+      <div class="adv-element" style="color:var(--mira)">Earth · The Architect</div>
+      <div class="adv-name">Mira</div>
+      <div class="adv-role">The Realist</div>
+      <div class="adv-archetype" style="color:rgba(212,146,26,0.7);background:rgba(212,146,26,0.06);border:1px solid rgba(212,146,26,0.15)">"Clarity through numbers"</div>
+      <div class="adv-desc">Mira turns every decision into a scenario. She needs three numbers before she forms an opinion — and she's usually right because of it.</div>
+      <div class="adv-trait-row">
+        <span class="adv-trait" style="background:rgba(212,146,26,0.08);color:rgba(212,146,26,0.7);border:1px solid rgba(212,146,26,0.15)">Precise</span>
+        <span class="adv-trait" style="background:rgba(212,146,26,0.08);color:rgba(212,146,26,0.7);border:1px solid rgba(212,146,26,0.15)">Calm</span>
+        <span class="adv-trait" style="background:rgba(212,146,26,0.08);color:rgba(212,146,26,0.7);border:1px solid rgba(212,146,26,0.15)">Factual</span>
+      </div>
+    </div>
+
+    <!-- DANTE -->
+    <div class="advisor-card" style="--c:var(--dante);--rot:5deg">
+      <svg class="adv-sigil" viewBox="0 0 72 72" fill="none">
+        <circle cx="36" cy="36" r="34" stroke="#d95c8a" stroke-width=".6" stroke-dasharray="3 3" opacity=".3"/>
+        <circle cx="36" cy="36" r="26" stroke="#d95c8a" stroke-width=".8" opacity=".15"/>
+        <!-- Broken circle sigil -->
+        <path d="M36 14 A22 22 0 0 1 58 36" stroke="#d95c8a" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".9"/>
+        <path d="M58 36 A22 22 0 0 1 36 58" stroke="#d95c8a" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".6"/>
+        <path d="M36 58 A22 22 0 0 1 14 36" stroke="#d95c8a" stroke-width=".8" fill="none" stroke-linecap="round" opacity=".4" stroke-dasharray="2 4"/>
+        <path d="M14 36 A22 22 0 0 1 36 14" stroke="#d95c8a" stroke-width=".8" fill="none" stroke-linecap="round" opacity=".2" stroke-dasharray="2 4"/>
+        <line x1="28" y1="28" x2="44" y2="44" stroke="#d95c8a" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+        <circle cx="28" cy="28" r="3" fill="#d95c8a" opacity=".6"/>
+        <circle cx="44" cy="44" r="3" fill="#d95c8a" opacity=".6"/>
+      </svg>
+      <div class="adv-element" style="color:var(--dante)">Void · The Shadow</div>
+      <div class="adv-name">Dante</div>
+      <div class="adv-role">Devil's Advocate</div>
+      <div class="adv-archetype" style="color:rgba(217,92,138,0.7);background:rgba(217,92,138,0.06);border:1px solid rgba(217,92,138,0.15)">"Growth through fire"</div>
+      <div class="adv-desc">Dante's only job is to ask the question everyone silently agreed not to ask. When the board starts converging — he attacks the consensus.</div>
+      <div class="adv-trait-row">
+        <span class="adv-trait" style="background:rgba(217,92,138,0.08);color:rgba(217,92,138,0.7);border:1px solid rgba(217,92,138,0.15)">Fearless</span>
+        <span class="adv-trait" style="background:rgba(217,92,138,0.08);color:rgba(217,92,138,0.7);border:1px solid rgba(217,92,138,0.15)">Sharp</span>
+        <span class="adv-trait" style="background:rgba(217,92,138,0.08);color:rgba(217,92,138,0.7);border:1px solid rgba(217,92,138,0.15)">Contrarian</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEBATE PREVIEW -->
+<section class="debate-section">
+  <span class="section-eyebrow">Live debate preview</span>
+  <h2 class="section-h2">Watch the board <em>disagree</em></h2>
+  <p class="section-sub" style="margin-bottom:40px">This is a real session. Every advisor reads what the others said — then responds. That's what makes it a debate, not five separate chatbots.</p>
+  <div class="debate-window">
+    <div class="debate-titlebar">
+      <div class="debate-dot" style="background:#e8623a;opacity:.7"></div>
+      <div class="debate-dot" style="background:#d4921a;opacity:.7"></div>
+      <div class="debate-dot" style="background:#2ab589;opacity:.7"></div>
+      <span class="debate-title">Clario · Live session</span>
+    </div>
+    <div class="debate-decision">
+      <div class="debate-decision-label">Your decision</div>
+      <div class="debate-decision-text">"I have been offered a senior director role at a tech company in London. The salary is double what I earn now in Amsterdam, but I would need to relocate and leave behind a life I have built over six years. I have a partner and we are not married yet. Should I take it?"</div>
+    </div>
+    <div class="debate-messages">
+      <div class="dmsg">
+        <div class="dmsg-av" style="background:rgba(232,98,58,0.2);color:#e8623a">R</div>
+        <div class="dmsg-body">
+          <div class="dmsg-name" style="color:#e8623a">Rex · Fire · The Emperor</div>
+          <div class="dmsg-text">Double salary is a category change, not an increment. The London tech market opens doors Amsterdam simply cannot. The real question is not whether to go — it is whether you have a 12-month plan to either bring your partner or return having built real leverage. What does your number look like to make this work?</div>
+        </div>
+      </div>
+      <div class="dmsg">
+        <div class="dmsg-av" style="background:rgba(42,181,137,0.2);color:#2ab589">N</div>
+        <div class="dmsg-body">
+          <div class="dmsg-name" style="color:#2ab589">Nadia · Water · The Oracle</div>
+          <div class="dmsg-text">Rex, you skipped the most important variable. An unmarried partner and a six-year life together. Before this becomes a financial calculation it needs to be an honest conversation. Have you actually asked your partner what they want — not what they would accept?</div>
+        </div>
+      </div>
+      <div class="dmsg">
+        <div class="dmsg-av" style="background:rgba(212,146,26,0.2);color:#d4921a">M</div>
+        <div class="dmsg-body">
+          <div class="dmsg-name" style="color:#d4921a">Mira · Earth · The Architect</div>
+          <div class="dmsg-text">Amsterdam to London is a 40-minute flight under £100. At double salary you can visit every two weeks and still save significantly more than you do now. Run the actual numbers before framing this as abandoning your relationship. This is a configuration change, not a departure.</div>
+        </div>
+      </div>
+      <div class="dmsg">
+        <div class="dmsg-av" style="background:rgba(217,92,138,0.2);color:#d95c8a">D</div>
+        <div class="dmsg-body">
+          <div class="dmsg-name" style="color:#d95c8a">Dante · Void · The Shadow</div>
+          <div class="dmsg-text">Nobody has asked the question that changes everything: why are you framing this as a solo decision? If your partner cannot or will not come, that tells you something important about the relationship — not just the job. I would want to know which problem you are actually solving here.</div>
+        </div>
+      </div>
+    </div>
+    <div class="debate-cta">
+      <p>Kai hasn't spoken yet — and the synthesis is waiting for you.</p>
+      <a class="btn-primary" href="#">Start your session →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ZODIAC SERVICE SECTION ══ -->
+<section class="zodiac-section" id="zodiac">
+  <span class="section-eyebrow">Daily zodiac service</span>
+  <h2 class="section-h2">Your stars, <em>every morning</em></h2>
+  <p class="section-sub" style="margin-bottom:16px">Six AI-personalized cards generated fresh each day — based on your real zodiac sign captured at registration.</p>
+  <div class="divider-line"></div>
+
+  <div class="cards-showcase" id="cards-showcase">
+    <div class="zodiac-card-row">
+
+      <div class="zc" style="--zc:#d4921a">
+        <div class="zc-icon">&#9670;</div>
+        <div class="zc-type">Fortune</div>
+        <div class="zc-title">Wealth &amp; opportunity</div>
+        <div class="zc-text">A financial decision you have been postponing becomes clearer today. Act before Thursday.</div>
+        <div class="zc-score">
+          <span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot"></span>
+          <span class="zc-score-label">Strong</span>
+        </div>
+      </div>
+
+      <div class="zc" style="--zc:#2ab589">
+        <div class="zc-icon">&#10052;</div>
+        <div class="zc-type">Love</div>
+        <div class="zc-title">Connection &amp; heart</div>
+        <div class="zc-text">Someone close needs to hear something you have been holding back. Today is the right moment.</div>
+        <div class="zc-score">
+          <span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot"></span><span class="zc-dot"></span>
+          <span class="zc-score-label">Moderate</span>
+        </div>
+      </div>
+
+      <div class="zc" style="--zc:#8b7cf8">
+        <div class="zc-icon">&#9775;</div>
+        <div class="zc-type">Future</div>
+        <div class="zc-title">Path &amp; direction</div>
+        <div class="zc-text">The path you chose last month is aligning. What felt uncertain is becoming the right direction.</div>
+        <div class="zc-score">
+          <span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot filled"></span>
+          <span class="zc-score-label">Excellent</span>
+        </div>
+      </div>
+
+      <div class="zc" style="--zc:#c9a96e">
+        <div class="zc-icon">&#9728;</div>
+        <div class="zc-type">Luck</div>
+        <div class="zc-title">Energy &amp; timing</div>
+        <div class="zc-text">Mercury is in your favour. Negotiations and conversations carry special weight today.</div>
+        <div class="zc-score">
+          <span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot"></span>
+          <span class="zc-score-label">High</span>
+        </div>
+      </div>
+
+      <div class="zc" style="--zc:#e8623a">
+        <div class="zc-icon">&#10084;</div>
+        <div class="zc-type">Health</div>
+        <div class="zc-title">Vitality &amp; energy</div>
+        <div class="zc-text">Physical energy peaks this afternoon. Prioritise movement before 3pm for lasting clarity.</div>
+        <div class="zc-score">
+          <span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot filled"></span><span class="zc-dot"></span>
+          <span class="zc-score-label">Good</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DAY MASTER CARD -->
+    <div class="master-card">
+      <div class="master-card-badge">&#9733; Day Master Card — Your complete daily reading</div>
+      <div class="master-card-sign">
+        <span class="master-sign-glyph">&#9811;</span>
+        <div>
+          <div class="master-sign-name">Pisces &#9843; · Sunday, March 15</div>
+          <div class="master-sign-sub">Neptune · Water · Your comprehensive daily reading</div>
+        </div>
+      </div>
+      <p class="master-card-text">Today carries an unusual confluence of Fortune and Future energy — both cards point toward the same window of opportunity. Neptune sharpens your intuition precisely when Mercury favours decisive action. The financial hesitation you have been carrying is not fear — it is timing. That timing ends today. On the relational front, the stillness you feel is not distance; it is the quiet before a meaningful conversation that has been building for weeks. Your health energy peaks between 2pm and 5pm — use that window for the conversation or the decision, not for routine tasks. Today's single action: send the message or make the call you have been drafting in your head.</p>
+      <div class="master-card-footer">
+        <span class="master-card-tag" style="color:#d4921a">Fortune: Strong &#9670;</span>
+        <span class="master-card-tag" style="color:#2ab589">Love: Moderate &#10052;</span>
+        <span class="master-card-tag" style="color:#8b7cf8">Future: Excellent &#9775;</span>
+        <span class="master-card-tag" style="color:#c9a96e">Luck: High &#9728;</span>
+        <span class="master-card-tag" style="color:#e8623a">Health: Good &#10084;</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:40px">
+    <p style="font-size:13px;color:var(--cream-dim);margin-bottom:20px;font-weight:300">Cards generated fresh every morning · Personalized to your real zodiac sign · Captured at registration</p>
+    <a class="btn-primary" href="#">Start your 3-day trial →</a>
+  </div>
+</section>
+
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <span class="section-eyebrow">Simple, unified pricing</span>
+  <h2 class="section-h2">Both services. <em>Every plan.</em></h2>
+  <p class="section-sub" style="margin-bottom:16px">Every subscription includes both the Board and the daily Zodiac cards. Start with 3 days free — then choose your plan.</p>
+
+  <div class="trial-banner">
+    <div class="trial-num">3</div>
+    <div>
+      <div class="trial-title">Days free trial — no card required</div>
+      <div class="trial-sub">3 board sessions · All 6 daily zodiac cards · Day Master Card · Full premium features. After 3 days, automatically continues on your chosen plan. Cancel anytime.</div>
+    </div>
+  </div>
+
+  <div class="billing-toggle">
+    <button class="billing-btn active" id="btn-monthly" onclick="setBilling('monthly')">Monthly</button>
+    <button class="billing-btn" id="btn-annual" onclick="setBilling('annual')">Annual <span class="save-badge">2 months free</span></button>
+  </div>
+
+  <div class="unified-pricing-grid">
+
+    <!-- CLARITY -->
+    <div class="uplan">
+      <div class="uplan-service-tag" style="color:#c9a96e;border-color:rgba(201,169,110,.3);background:rgba(201,169,110,.06)">&#9728; Board + Zodiac</div>
+      <div class="uplan-name">Clarity</div>
+      <div class="uplan-price-row">
+        <span class="uplan-price" id="price-clarity">$14.99</span>
+        <span class="uplan-per">/mo</span>
+      </div>
+      <div class="uplan-annual-note" id="note-clarity">&nbsp;</div>
+      <div class="uplan-desc">Everything you need to make better decisions and start every morning with clarity.</div>
+      <div class="uplan-divider"></div>
+      <div class="uplan-features">
+        <div class="uf">30 board sessions / month</div>
+        <div class="uf">All 5 advisors every session</div>
+        <div class="uf">All 6 daily zodiac cards</div>
+        <div class="uf">Fortune · Love · Future · Luck · Health</div>
+        <div class="uf">Day Master Card daily</div>
+        <div class="uf">Decision history saved</div>
+        <div class="uf">Shareable verdict cards</div>
+        <div class="uf">Personality quiz &amp; archetype</div>
+        <div class="uf no">Unlimited sessions</div>
+        <div class="uf no">Board reads your cards</div>
+        <div class="uf no">Custom advisor personalities</div>
+      </div>
+      <a class="uplan-btn uplan-btn-outline" href="#">Start free trial →</a>
+    </div>
+
+    <!-- INSIGHT -->
+    <div class="uplan uplan-featured">
+      <div class="uplan-popular-badge">Most popular</div>
+      <div class="uplan-service-tag" style="color:#c9a96e;border-color:rgba(201,169,110,.4);background:rgba(201,169,110,.08)">&#9733; Board + Zodiac</div>
+      <div class="uplan-name">Insight</div>
+      <div class="uplan-price-row">
+        <span class="uplan-price" id="price-insight" style="color:var(--gold)">$29.99</span>
+        <span class="uplan-per">/mo</span>
+      </div>
+      <div class="uplan-annual-note" id="note-insight">&nbsp;</div>
+      <div class="uplan-desc">For those who take their decisions seriously. Deeper guidance, no limits.</div>
+      <div class="uplan-divider"></div>
+      <div class="uplan-features">
+        <div class="uf">Unlimited board sessions</div>
+        <div class="uf">All 5 advisors every session</div>
+        <div class="uf">All 6 daily zodiac cards</div>
+        <div class="uf">Fortune · Love · Future · Luck · Health</div>
+        <div class="uf">Day Master Card daily</div>
+        <div class="uf bundle-highlight">Board reads your cards (2/mo)</div>
+        <div class="uf bundle-highlight">Weekly zodiac deep reading</div>
+        <div class="uf bundle-highlight">Monthly life map</div>
+        <div class="uf bundle-highlight">Custom advisor personalities</div>
+        <div class="uf bundle-highlight">PDF session export</div>
+        <div class="uf bundle-highlight">Priority response speed</div>
+      </div>
+      <a class="uplan-btn uplan-btn-gold" href="#">Start free trial →</a>
+    </div>
+
+    <!-- MASTERY -->
+    <div class="uplan">
+      <div class="uplan-service-tag" style="color:#8b7cf8;border-color:rgba(139,124,248,.3);background:rgba(139,124,248,.06)">&#9775; Board + Zodiac</div>
+      <div class="uplan-name">Mastery</div>
+      <div class="uplan-price-row">
+        <span class="uplan-price" id="price-mastery">$49.99</span>
+        <span class="uplan-per">/mo</span>
+      </div>
+      <div class="uplan-annual-note" id="note-mastery">&nbsp;</div>
+      <div class="uplan-desc">For teams navigating decisions together. Shared sessions, shared insight, shared growth.</div>
+      <div class="uplan-divider"></div>
+      <div class="uplan-features">
+        <div class="uf">5 seats included</div>
+        <div class="uf">150 pooled board sessions</div>
+        <div class="uf">All 6 zodiac cards per member</div>
+        <div class="uf">Day Master Card per member</div>
+        <div class="uf bundle-highlight">Team decision sharing</div>
+        <div class="uf bundle-highlight">Admin dashboard</div>
+        <div class="uf bundle-highlight">Usage analytics</div>
+        <div class="uf bundle-highlight">Custom team branding</div>
+        <div class="uf bundle-highlight">Invoice billing available</div>
+        <div class="uf">+$8 / extra seat / month</div>
+      </div>
+      <a class="uplan-btn uplan-btn-outline" href="#">Start free trial →</a>
+    </div>
+
+  </div>
+
+  <p class="pricing-note">3-day free trial on all plans · No credit card required to start · Cancel anytime · Advisors provide perspectives only — not financial, legal, or medical advice</p>
+</section>
+
+
+
+<!-- SOCIAL PROOF -->
+<section class="social-section">
+  <span class="section-eyebrow" style="display:block;margin-bottom:40px">What people are saying</span>
+  <div class="social-pills">
+    <div class="social-pill">
+      <div class="social-pill-text">"Dante asked me the one question I had been avoiding for six months. The answer changed my decision completely."</div>
+      <div class="social-pill-author">@sarahk_nyc</div>
+      <div class="social-pill-platform">Twitter · Pro user</div>
+    </div>
+    <div class="social-pill">
+      <div class="social-pill-text">"I submitted whether to move my company to Dubai. Rex and Mira agreed. Nadia caught what I hadn't told anyone. Eerie."</div>
+      <div class="social-pill-author">Founder, SaaS startup</div>
+      <div class="social-pill-platform">Product Hunt review</div>
+    </div>
+    <div class="social-pill">
+      <div class="social-pill-text">"I sent my husband his verdict card. He read it three times and then said 'the AI understood the problem better than I did.'"</div>
+      <div class="social-pill-author">@claire_m</div>
+      <div class="social-pill-platform">Instagram · Power user</div>
+    </div>
+    <div class="social-pill">
+      <div class="social-pill-text">"Used it for a partnership decision. Kai introduced an option I hadn't considered. Three weeks later that option is the plan."</div>
+      <div class="social-pill-author">Business Director, London</div>
+      <div class="social-pill-platform">LinkedIn · Teams user</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="divider-line"></div>
+  <h2 class="final-cta-h">Your board is<br><em>waiting.</em></h2>
+  <p class="final-cta-sub">Bring the decision you've been carrying alone.</p>
+  <a class="btn-primary" style="font-size:16px;padding:16px 40px" href="#">Convene your board — free →</a>
+  <p style="font-size:12px;color:var(--text-dim);margin-top:20px">No card required · 3 free sessions · Takes 30 seconds to start</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo" style="font-family:'Cormorant Garamond',Georgia,serif;letter-spacing:-.01em">Clario<span style="font-size:11px;color:var(--gold-dim);letter-spacing:.06em;margin-left:6px;vertical-align:middle">AI.AE</span></div>
+  <div class="footer-links">
+    <a class="footer-link" href="#">Privacy</a>
+    <a class="footer-link" href="#">Terms</a>
+    <a class="footer-link" href="#">Pricing</a>
+    <a class="footer-link" href="#">Contact</a>
+  </div>
+  <p class="footer-disc">Advisors provide AI-generated perspectives for reflective purposes only. Nothing on this platform constitutes financial, legal, medical, or professional advice of any kind.</p>
+</footer>
+
+<script>
+/* STARS */
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<120;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*1.8+.3;
+    Object.assign(s.style,{
+      width:sz+'px',height:sz+'px',
+      left:Math.random()*100+'%',top:Math.random()*100+'%',
+      '--d':(2+Math.random()*4)+'s',
+      '--delay':(-Math.random()*4)+'s',
+      '--min':(0.05+Math.random()*.1).toFixed(2),
+      '--max':(0.3+Math.random()*.6).toFixed(2),
+    });
+    c.appendChild(s);
+  }
+})();
+
+/* NAV SCROLL */
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>40);
+});
+
+/* PRICING TOGGLE */
+const prices={
+  clarity:{monthly:'$14.99',annual:'$12.49'},
+  insight:{monthly:'$29.99',annual:'$24.99'},
+  mastery:{monthly:'$49.99',annual:'$41.66'}
+};
+const notes={
+  clarity:{monthly:'',annual:'Billed $149.99/yr — 2 months free'},
+  insight:{monthly:'',annual:'Billed $299.99/yr — 2 months free'},
+  mastery:{monthly:'',annual:'Billed $499.99/yr — 2 months free'}
+};
+
+function setBilling(mode){
+  document.getElementById('btn-monthly').className='billing-btn'+(mode==='monthly'?' active':'');
+  document.getElementById('btn-annual').className='billing-btn'+(mode==='annual'?' active':'');
+  ['clarity','insight','mastery'].forEach(p=>{
+    const pe=document.getElementById('price-'+p);
+    const ne=document.getElementById('note-'+p);
+    if(pe) pe.textContent=prices[p][mode];
+    if(ne) ne.textContent=notes[p][mode];
+  });
+}
+
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.opacity='1';
+      e.target.style.transform='translateY(0)';
+    }
+  });
+},{threshold:.1});
+document.querySelectorAll('.advisor-card,.step,.pricing-card,.social-pill,.debate-window').forEach(el=>{
+  el.style.opacity='0';
+  el.style.transform='translateY(20px)';
+  el.style.transition='opacity .6s ease, transform .6s ease';
+  obs.observe(el);
+});
+</script>
+</body>
+</html>

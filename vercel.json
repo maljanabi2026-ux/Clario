@@ -1,13 +1,10 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "api-chat.js", "use": "@vercel/node" },
-    { "src": "api-zodiac.js", "use": "@vercel/node" },
-    { "src": "DEPLOY.html", "use": "@vercel/static" }
-  ],
   "routes": [
-    { "src": "/api/chat", "dest": "/api-chat.js" },
-    { "src": "/api/zodiac", "dest": "/api-zodiac.js" },
-    { "src": "/", "dest": "/DEPLOY.html" }
+    { "src": "/api/chat", "dest": "/api/chat.js" },
+    { "src": "/api/zodiac", "dest": "/api/zodiac.js" },
+    { "src": "/app", "dest": "/clario-app.html" },
+    { "src": "/dashboard", "dest": "/clario-dashboard.html" },
+    { "src": "/", "dest": "/clario-landing.html" }
   ]
 }
