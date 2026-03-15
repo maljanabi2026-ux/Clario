@@ -1,1 +1,11 @@
-node_modules
+{
+  "version": 2,
+  "outputDirectory": ".",
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/app", "dest": "/clario-app.html" },
+    { "src": "/dashboard", "dest": "/clario-dashboard.html" },
+    { "src": "/", "dest": "/clario-landing.html" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}
