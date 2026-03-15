@@ -74,7 +74,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001', // Use Haiku for card generation — faster + cheaper
-        max_tokens: 400,
+        max_tokens: type === 'master' ? 1200 : 600,
         messages: [{ role: 'user', content: prompt }],
       }),
     });
