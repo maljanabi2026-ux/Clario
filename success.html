@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Welcome to Clario</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08070f;--gold:#c9a96e;--cream:#f0ead8;--dim:#7a7090;--green:#2ab589;--border:rgba(201,169,110,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--cream);min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+.wrap{max-width:480px}
+.icon{font-size:48px;margin-bottom:24px}
+h1{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;color:var(--cream);margin-bottom:10px}
+h1 em{font-style:italic;color:var(--gold)}
+.sub{font-size:15px;color:var(--dim);line-height:1.7;margin-bottom:40px}
+.badge{display:inline-block;padding:6px 18px;background:rgba(42,181,137,.1);border:1px solid rgba(42,181,137,.3);border-radius:20px;font-size:12px;color:var(--green);letter-spacing:.06em;text-transform:uppercase;margin-bottom:32px}
+.btn{display:inline-block;padding:14px 36px;background:var(--gold);color:var(--bg);border-radius:8px;font-size:14px;font-weight:500;text-decoration:none;letter-spacing:.04em;transition:background .2s}
+.btn:hover{background:var(--cream)}
+.note{font-size:11px;color:var(--dim);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="icon">✦</div>
+  <div class="badge">Payment confirmed</div>
+  <h1>Welcome to <em>Clario</em></h1>
+  <p class="sub">Your 3-day free trial has started. Your board of advisors is ready — bring your first decision.</p>
+  <a class="btn" href="/app">Enter the boardroom →</a>
+  <p class="note">A receipt has been sent to your email · Cancel anytime from your account settings</p>
+</div>
+</body>
+</html>

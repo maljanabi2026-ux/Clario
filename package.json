@@ -1,0 +1,24 @@
+{
+  "name": "clario",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maljanabi2026-ux/Clario.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/maljanabi2026-ux/Clario/issues"
+  },
+  "homepage": "https://github.com/maljanabi2026-ux/Clario#readme",
+  "dependencies": {
+    "stripe": "^20.4.1"
+  }
+}

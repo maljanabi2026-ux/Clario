@@ -1,0 +1,18 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="80" fill="#08070f"/>
+  <!-- Outer border -->
+  <rect x="10" y="10" width="492" height="492" rx="74" fill="none" stroke="#c9a96e" stroke-width="8" opacity=".25"/>
+  <!-- Orbit ring -->
+  <circle cx="256" cy="256" r="160" stroke="#c9a96e" stroke-width="6" opacity=".1" stroke-dasharray="18 28"/>
+  <!-- Constellation dots -->
+  <circle cx="160" cy="330" r="22" fill="#c9a96e" opacity=".28"/>
+  <circle cx="210" cy="240" r="24" fill="#c9a96e" opacity=".55"/>
+  <circle cx="290" cy="195" r="30" fill="#c9a96e" opacity=".95"/>
+  <circle cx="255" cy="340" r="19" fill="#c9a96e" opacity=".2"/>
+  <circle cx="355" cy="305" r="20" fill="#c9a96e" opacity=".48"/>
+  <!-- Constellation lines -->
+  <path d="M160 330 L210 240 L290 195" stroke="#c9a96e" stroke-width="4" fill="none" opacity=".18" stroke-linecap="round"/>
+  <!-- CLARIO text -->
+  <text x="256" y="448" font-family="Georgia,serif" font-size="72" font-weight="700" fill="#f0ead8" letter-spacing="18" text-anchor="middle">CLARIO</text>
+</svg>

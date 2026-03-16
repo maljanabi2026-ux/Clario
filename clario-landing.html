@@ -832,7 +832,7 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
         <div class="uf no">Board reads your cards</div>
         <div class="uf no">Custom advisor personalities</div>
       </div>
-      <a class="uplan-btn uplan-btn-outline" href="#">Start free trial →</a>
+      <button class="uplan-btn uplan-btn-outline" onclick="startCheckout('clarity')">Start free trial →</button>
     </div>
 
     <!-- INSIGHT -->
@@ -860,7 +860,7 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
         <div class="uf bundle-highlight">PDF session export</div>
         <div class="uf bundle-highlight">Priority response speed</div>
       </div>
-      <a class="uplan-btn uplan-btn-gold" href="#">Start free trial →</a>
+      <button class="uplan-btn uplan-btn-gold" onclick="startCheckout('insight')">Start free trial →</button>
     </div>
 
     <!-- MASTERY -->
@@ -886,7 +886,7 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
         <div class="uf bundle-highlight">Invoice billing available</div>
         <div class="uf">+$8 / extra seat / month</div>
       </div>
-      <a class="uplan-btn uplan-btn-outline" href="#">Start free trial →</a>
+      <button class="uplan-btn uplan-btn-outline" onclick="startCheckout('mastery')">Start free trial →</button>
     </div>
 
   </div>
@@ -1006,6 +1006,35 @@ document.querySelectorAll('.advisor-card,.step,.pricing-card,.social-pill,.debat
   el.style.transition='opacity .6s ease, transform .6s ease';
   obs.observe(el);
 });
+</script>
+<script>
+// Stripe checkout — reads current billing toggle state
+async function startCheckout(plan) {
+  const billing = document.getElementById('btn-annual').classList.contains('active') ? 'annual' : 'monthly';
+  const btn = event.currentTarget;
+  const original = btn.textContent;
+  btn.textContent = 'Loading...';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/stripe-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan, billing })
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('Something went wrong. Please try again.');
+      btn.textContent = original;
+      btn.disabled = false;
+    }
+  } catch (err) {
+    alert('Something went wrong. Please try again.');
+    btn.textContent = original;
+    btn.disabled = false;
+  }
+}
 </script>
 </body>
 </html>

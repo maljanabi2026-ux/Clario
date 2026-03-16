@@ -3,6 +3,9 @@
   "routes": [
     { "src": "/api/chat", "dest": "/api/chat.js" },
     { "src": "/api/zodiac", "dest": "/api/zodiac.js" },
+    { "src": "/api/stripe-checkout", "dest": "/api/stripe-checkout.js" },
+    { "src": "/api/stripe-webhook", "dest": "/api/stripe-webhook.js" },
+    { "src": "/success", "dest": "/success.html" },
     { "src": "/app", "dest": "/clario-app.html" },
     { "src": "/dashboard", "dest": "/clario-dashboard.html" },
     { "src": "/", "dest": "/clario-landing.html" }
